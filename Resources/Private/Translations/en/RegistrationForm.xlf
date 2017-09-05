@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+        <file original="" product-name="KaufmannDigital.CleverReach" source-language="en" datatype="plaintext">
+                <body>
+                        <trans-unit id="email.placeholder" xml:space="preserve">
+                                <source>you@domain.com</source>
+                        </trans-unit>
+                        <trans-unit id="submit.value" xml:space="preserve">
+                                <source>Register</source>
+                        </trans-unit>
+
+                        <trans-unit id="success-message" xml:space="preserve">
+                                <source>Thanks, your email address was added to our list!</source>
+                        </trans-unit>
+                        <trans-unit id="success-message-doi" xml:space="preserve">
+                                <source>Thanks! You will now receive a confirmation mail. Please click on the link to confirm your subscription.</source>
+                        </trans-unit>
+                </body>
+        </file>
+</xliff>

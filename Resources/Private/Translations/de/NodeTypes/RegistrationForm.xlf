@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+        <file original="" product-name="KaufmannDigital.CleverReach" source-language="de" datatype="plaintext">
+                <body>
+                        <trans-unit id="ui.label" xml:space="preserve">
+                                <source>CleverReach Newsletter Anmeldung</source>
+                        </trans-unit>
+                        <trans-unit id="ui.help.message" xml:space="preserve">
+                                <source>Ein Formular zur Anmeldung an CleverReach Gruppen</source>
+                        </trans-unit>
+                        <trans-unit id="tabs.cleverreach" xml:space="preserve">
+                                <source>CleverReach Einstellungen</source>
+                        </trans-unit>
+                        <trans-unit id="groups.config" xml:space="preserve">
+                                <source>CleverReach Einstellungen</source>
+                        </trans-unit>
+                        <trans-unit id="properties.groupId" xml:space="preserve">
+                                <source>Gruppe</source>
+                        </trans-unit>
+                        <trans-unit id="properties.groupId.ui.help.message" xml:space="preserve">
+                                <source>Gruppe, zu der die Empfänger hinzugefügt werden.</source>
+                        </trans-unit>
+                        <trans-unit id="properties.formId" xml:space="preserve">
+                                <source>Formular</source>
+                        </trans-unit>
+                        <trans-unit id="properties.formId.ui.help.message" xml:space="preserve">
+                                <source>Für die Verwendung von DOI müssen Sie ein Formular auswählen, welches für den Versand genutzt wrid.</source>
+                        </trans-unit>
+                        <trans-unit id="properties.useDOI" xml:space="preserve">
+                                <source>DOI (Double-Opt-In) nutzen</source>
+                        </trans-unit>
+                </body>
+        </file>
+</xliff>

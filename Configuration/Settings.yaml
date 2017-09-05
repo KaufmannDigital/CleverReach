@@ -1,0 +1,25 @@
+Neos:
+  Neos:
+    userInterface:
+      translation:
+        autoInclude:
+          KaufmannDigital.CleverReach:
+            - 'NodeTypes/*'
+    fusion:
+      autoInclude:
+        KaufmannDigital.CleverReach: true
+  Flow:
+    mvc:
+      routes:
+        'KaufmannDigital.CleverReach': true
+
+
+KaufmannDigital:
+  CleverReach:
+    apiEndpoint: 'https://rest.cleverreach.com/v2'
+
+    #Overrride this with your custom CleverReach credentials in Site-Package/Global configuration!
+    credentials:
+      clientId: '' #CleverReach customer number
+      login: '' #CleverReach username/email
+      password: '' #CleverReach password

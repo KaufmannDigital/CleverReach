@@ -1,0 +1,32 @@
+<f:form.validationResults>
+    <f:if condition="{validationResults.flattenedErrors}">
+        <div class="validation-results">
+            <f:for each="{validationResults.flattenedErrors}" key="propertyName" as="errors">
+                <ul>
+                    <f:for each="{errors}" key="label" as="error">
+                        <li>
+                            <f:translate id="{error.code}" source="ValidationErrors" package="KaufmannDigital.CleverReach">{error.message}</f:translate>
+                        </li>
+                    </f:for>
+                </ul>
+            </f:for>
+        </div>
+    </f:if>
+</f:form.validationResults>
+
+
+<f:form action="subscribe" method="post">
+    <f:form.textfield name="receiverData[email]" placeholder="{f:translate(id: 'email.placeholder', source: 'RegistrationForm')}" />
+
+    <f:form.hidden name="receiverData[source]" value="{sourceUrl}" />
+    <f:form.hidden name="receiverData[groupId]" value="{node.properties.groupId}" />
+
+    <f:comment>
+        You can add more custom fields using a hidden field with name receiverData[attributes][fieldName]. (global_attributes for global fields).
+        Order-Informations can also be passed under receiverData[order].
+        Custom fields have to be configured at CleverReach login.
+        Everything inside of "receiverData" will be passed to CleverReach.
+    </f:comment>
+
+    <f:form.submit value="{f:translate(id: 'submit.value', source: 'RegistrationForm')}" />
+</f:form>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+        <file original="" product-name="KaufmannDigital.CleverReach" source-language="en" datatype="plaintext">
+                <body>
+                        <trans-unit id="1504541575" xml:space="preserve">
+                                <source>Please specify an valid email address.</source>
+                        </trans-unit>
+                        <trans-unit id="1504541578" xml:space="preserve">
+                                <source>No valid list ID was supplied. Please contact Webmaster.</source>
+                        </trans-unit>
+                        <trans-unit id="1504541582" xml:space="preserve">
+                                <source>This email address is already in our list of receivers.</source>
+                        </trans-unit>
+
+                </body>
+        </file>
+</xliff>
