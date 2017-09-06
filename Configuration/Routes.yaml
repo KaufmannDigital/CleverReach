@@ -1,0 +1,8 @@
+-
+  name: 'RESTful API'
+  uriPattern: 'cleverreach/receiver'
+  httpMethods: ['POST', 'PUT']
+  defaults:
+    '@package':    'KaufmannDigital.CleverReach'
+    '@controller': 'Ajax'
+    '@action':     'subscribe'

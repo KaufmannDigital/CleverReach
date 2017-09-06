@@ -2,10 +2,15 @@ privilegeTargets:
   'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
     'KaufmannDigital.CleverReach:RegistrationForm':
       matcher: 'method(KaufmannDigital\CleverReach\Controller\SubscriptionController->(?!initialize).*Action())'
+    'KaufmannDigital.CleverReach:AjaxController':
+      matcher: 'method(KaufmannDigital\CleverReach\Controller\AjaxController->(?!initialize).*Action())'
 roles:
 
   'Neos.Flow:Everybody':
     privileges:
       -
         privilegeTarget: 'KaufmannDigital.CleverReach:RegistrationForm'
+        permission: GRANT
+      -
+        privilegeTarget: 'KaufmannDigital.CleverReach:AjaxController'
         permission: GRANT
