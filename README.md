@@ -25,7 +25,9 @@ Now please make sure that your user has API access: [Further Reading](https://su
 
 **Note:** Sadly CleverReach® does not supply a static API-Key for your account. Thats why the package needs your credentials to get and renew the Token. Your credentials will only be transferd via HTTPS!
 
-Congratulations, you are ready to use KaufmannDigital.CleverReach in your Neos installation.
+**Optional:** If you want to use Ajax submitting your forms, please load the shipped JavaScript (jQuery needed) using `<script src="{f:uri.resource(path: 'JavaScript/Main.js', package: 'KaufmannDigital.CleverReach')}"></script>` inside your template or create your own Ajax-action.  
+
+_Congratulations, you are ready to use **KaufmannDigital.CleverReach** in your Neos installation._
 
 
 Setting up the Registration Form 

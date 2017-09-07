@@ -1,32 +1,56 @@
-<f:form.validationResults>
-    <f:if condition="{validationResults.flattenedErrors}">
-        <div class="validation-results">
-            <f:for each="{validationResults.flattenedErrors}" key="propertyName" as="errors">
-                <ul>
-                    <f:for each="{errors}" key="label" as="error">
-                        <li>
-                            <f:translate id="{error.code}" source="ValidationErrors" package="KaufmannDigital.CleverReach">{error.message}</f:translate>
-                        </li>
+<div class="cleverreach">
+    <div class="cleverreach__errors">
+        <f:form.validationResults>
+            <f:if condition="{validationResults.flattenedErrors}">
+                <div class="validation-results">
+                    <f:for each="{validationResults.flattenedErrors}" key="propertyName" as="errors">
+                        <ul>
+                            <f:for each="{errors}" key="label" as="error">
+                                <li>
+                                    <f:translate id="{error.code}" source="ValidationErrors"
+                                                 package="KaufmannDigital.CleverReach">{error.message}
+                                    </f:translate>
+                                </li>
+                            </f:for>
+                        </ul>
                     </f:for>
-                </ul>
-            </f:for>
-        </div>
+                </div>
+            </f:if>
+        </f:form.validationResults>
+    </div>
+
+    <f:if condition="{node.properties.useAjax}">
+        <f:then>
+            <f:render section="ajax" />
+
+        </f:then>
+        <f:else>
+            <f:render section="standard" />
+        </f:else>
     </f:if>
-</f:form.validationResults>
+
+</div>
+
+<f:section name="standard">
+    <f:form action="subscribe" method="post" class="cleverreach__form">
+        <f:form.textfield name="receiverData[email]" placeholder="{f:translate(id: 'email.placeholder', source: 'RegistrationForm')}"/>
+
+        <f:form.hidden name="receiverData[source]" value="{sourceUrl}"/>
+        <f:form.hidden name="receiverData[groupId]" value="{node.properties.groupId}"/>
+
+        <f:form.submit value="{f:translate(id: 'submit.value', source: 'RegistrationForm')}"/>
+    </f:form>
+</f:section>
 
 
-<f:form action="subscribe" method="post">
-    <f:form.textfield name="receiverData[email]" placeholder="{f:translate(id: 'email.placeholder', source: 'RegistrationForm')}" />
+<f:section name="ajax">
+    <form action="{f:uri.action(action: 'subscribe', controller: 'Ajax', package: 'KaufmannDigital.CleverReach', useParentRequest: true, absolute: true)}" method="post" class="cleverreach__form cleverreach__form--ajax">
+        <input type="text" name="receiverData[email]" placeholder="{f:translate(id: 'email.placeholder', source: 'RegistrationForm')}" />
 
-    <f:form.hidden name="receiverData[source]" value="{sourceUrl}" />
-    <f:form.hidden name="receiverData[groupId]" value="{node.properties.groupId}" />
+        <input type="hidden" name="receiverData[source]" value="{sourceUrl}"/>
+        <input type="hidden" name="receiverData[groupId]" value="{node.properties.groupId}"/>
+        <input type="hidden" name="registrationForm" value="{node.contextPath}"/>
 
-    <f:comment>
-        You can add more custom fields using a hidden field with name receiverData[attributes][fieldName]. (global_attributes for global fields).
-        Order-Informations can also be passed under receiverData[order].
-        Custom fields have to be configured at CleverReach login.
-        Everything inside of "receiverData" will be passed to CleverReach.
-    </f:comment>
-
-    <f:form.submit value="{f:translate(id: 'submit.value', source: 'RegistrationForm')}" />
-</f:form>
+        <input type="submit" value="{f:translate(id: 'submit.value', source: 'RegistrationForm')}"/>
+    </form>
+</f:section>

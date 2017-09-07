@@ -2,48 +2,55 @@
   superTypes:
     'Neos.Neos:Content': true
   ui:
-    label: 'i18n'
+    label: i18n
     help:
-      message: 'i18n'
+      message: i18n
     icon: 'icon-paper-plane'
     inspector:
       tabs:
         cleverreach:
           icon: 'icon-paper-plane'
-          label: 'i18n'
+          label: i18n
       groups:
         config:
           icon: 'icon-cogs'
-          label: 'i18n'
+          label: i18n
           tab: 'cleverreach'
   properties:
     groupId:
-      type: 'integer'
+      type: integer
       ui:
-        label: 'i18n'
+        label: i18n
         help:
-          message: 'i18n'
+          message: i18n
         inspector:
-          group: 'config'
+          group: config
           editor: 'Content/Inspector/Editors/SelectBoxEditor'
           editorOptions:
             dataSourceIdentifier: 'kaufmanndigital-cleverreach-groups'
       validation:
         'Neos.Neos/Validation/NotEmptyValidator': true
     formId:
-      type: 'integer'
+      type: integer
       ui:
-        label: 'i18n'
+        label: i18n
         help:
-          message: 'i18n'
+          message: i18n
         inspector:
-          group: 'config'
+          group: config
           editor: 'Content/Inspector/Editors/SelectBoxEditor'
           editorOptions:
             dataSourceIdentifier: 'kaufmanndigital-cleverreach-forms'
     useDOI:
-      type: 'boolean'
+      type: boolean
       ui:
-        label: 'i18n'
+        label: i18n
         inspector:
-          group: 'config'
+          group: config
+    useAjax:
+      type: boolean
+      ui:
+        label: i18n
+        inspector:
+          group: config
+      

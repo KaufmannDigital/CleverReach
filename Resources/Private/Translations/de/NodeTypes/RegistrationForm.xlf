@@ -29,6 +29,9 @@
                         <trans-unit id="properties.useDOI" xml:space="preserve">
                                 <source>DOI (Double-Opt-In) nutzen</source>
                         </trans-unit>
+                        <trans-unit id="properties.useAjax" xml:space="preserve">
+                                <source>Ajax zum absenden nutzen</source>
+                        </trans-unit>
                 </body>
         </file>
 </xliff>
