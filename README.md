@@ -95,7 +95,7 @@ You did a Bugfix? Great! Please submit it as PR to share it with other users.
 Planned Features
 ----------------
 Planned functions are also created as issues and marked as such.  
-You have another idea? Or would you like to help with the implementation? Gladly! Jimply create new issues or PRs.
+You have another idea? Or would you like to help with the implementation? Gladly! Simply create new issues or PRs.
 
 Maintainer
 ----------
