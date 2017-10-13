@@ -1,7 +1,7 @@
 KaufmannDigital.CleverReach
 ===========================
 
-An easy-to-use package, that integrates [CleverReach](https://www.cleverreach.com)® into your [Neos](https://www.neos.io) site.
+An easy-to-use package, that integrates the email marketing solution [CleverReach](https://www.cleverreach.com)® into your [Neos](https://www.neos.io) site to directly add new subscribers to your newsletter lists via registration form.
 
 Installation
 ------------
@@ -34,7 +34,7 @@ Setting up the Registration Form
 --------------------------------
 
 In order to add a Registration Form to your Website, you have to **create a group** (and a form, if your want to use [DOI](https://www.cleverreach.com/de/funktionen/empfaenger-verwalten/doi-anmeldeformulare/))  
-Currently these steps can not be done by this Package (see Planned Features). So please go to your [CleverReach Login](https://www.cleverreach.com/de/login/) and follow the instructions there.
+Currently these steps can not be done by this package (see Planned Features). So please go to your [CleverReach Login](https://www.cleverreach.com/de/login/) and follow the instructions there.
 
 When you finished, login into your Neos and navigate to the page, you want to place the registration form on.  
 Now select the "CleverReach Registration Form" NodeType from the list and insert it where you want.
@@ -89,8 +89,8 @@ FAQ
 
 Known Bugs
 ----------
-Known Bugs are submitted as issue. Please have a look to it, before you supply a Bug you found.  
-You did a Bugfix? Great! Please submit it as PR to share it with other users. 
+Known Bugs are submitted as issue. Please have a look at it, before you supply a bug you found.  
+You did a bugfix? Great! Please submit it as PR to share it with other users. 
 
 Planned Features
 ----------------
