@@ -9,7 +9,6 @@ $(document).ready(function () {
             data: $(self).find(":input").serialize(),
             dataType: "json",
             success: function (response) {
-                console.log(response);
                 $('.cleverreach__form').hide();
                 $('.cleverreach__errors').html('');
                 $('.cleverreach__errors').html('<p>' + response.message + '</p>');
