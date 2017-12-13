@@ -80,6 +80,23 @@ Then you can add something like that to the form:
 ```
 
 
+Configuring Views through Views.yaml
+---
+
+If you want to override the package templates in your site package, you can create a `Views.yaml` in your configuration folder.
+
+```yaml
+-
+  requestFilter: 'isPackage("KaufmannDigital.CleverReach") && isController("Subscription") && isAction("index")'
+  options:
+    templatePathAndFilename: 'resource://My.Package/Private/Templates/.../Index.html'
+-
+  requestFilter: 'isPackage("KaufmannDigital.CleverReach") && isController("Subscription") && isAction("subscribe")'
+  options:
+    templatePathAndFilename: 'resource://My.Package/Private/Templates/.../Subscribe.html'
+```
+
+
 FAQ
 ---
 
