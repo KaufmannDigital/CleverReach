@@ -3,7 +3,7 @@
     "description": "An easy-to-use package that integrates CleverReach(R) into your Neos website",
     "type": "neos-package",
     "homepage": "https://www.kaufmann.digital",
-    "license": "GPL-3.0+",
+    "license": "GPL-3.0-or-later",
     "require": {
         "neos/neos": "^3.0"
     },
