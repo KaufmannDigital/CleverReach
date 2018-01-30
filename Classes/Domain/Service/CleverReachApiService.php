@@ -65,6 +65,19 @@ class CleverReachApiService
 
 
     /**
+     * @return array
+     */
+    public function getGlobalAttributes() : array
+    {
+        try {
+            $response = $this->fireRequest('GET', 'attributes');
+            return $response !== false ? $response : [];
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
      * Returns all groups
      *
      * @return array Groups as Array
@@ -72,6 +85,32 @@ class CleverReachApiService
     public function getGroups()
     {
         return $this->fireRequest('GET', 'groups.json');
+
+    }
+
+    /**
+     * @param int $groupId
+     * @return mixed
+     * @throws ApiRequestException
+     * @throws NotFoundException
+     */
+    public function getGroup(int $groupId)
+    {
+        return $this->fireRequest('GET', 'groups.json/' . $groupId);
+    }
+
+    /**
+     * @param int $groupId
+     * @return mixed
+     */
+    public function getGroupAttributes(int $groupId)
+    {
+        try {
+            $response = $this->fireRequest('GET', 'groups.json/' . $groupId . '/attributes');
+            return $response !== false ? $response : [];
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     /**
@@ -191,7 +230,6 @@ class CleverReachApiService
 
         //Create request and set header
         $request = Request::create($uri, $method);
-        $request->setHeader('Accept', 'application/json; charset=utf-8');
         $request->setHeader('Content-Type', 'application/json; charset=utf-8');
         $request->setHeader('Authorization', 'Bearer ' . $this->apiToken);
 
