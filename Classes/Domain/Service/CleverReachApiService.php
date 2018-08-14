@@ -185,6 +185,26 @@ class CleverReachApiService
 
 
     /**
+     * Updates or adds a new receiver tp $groupId
+     * @param array $receiverData Array of receiverData. Key "email" is required (see CleverReach API Docs)
+     * @param int $groupId
+     * @param bool $activate
+     */
+    public function addOrUpdateReceiver(array $receiverData, $groupId, $activate = true)
+    {
+        if ($activate !== true) {
+            $receiverData['deactivated'] = time();
+        }
+
+        $this->fireRequest(
+            'POST',
+            'groups.json/' . $groupId . '/receivers/upsert',
+            $receiverData
+        );
+    }
+
+
+    /**
      * Authenticate against the API to get a valid JWT
      *
      * @param array $client
