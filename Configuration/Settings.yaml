@@ -17,9 +17,11 @@ Neos:
 KaufmannDigital:
   CleverReach:
     apiEndpoint: 'https://rest.cleverreach.com/v2'
+    oauthTokenEndpoint: 'https://rest.cleverreach.com/oauth/token.php'
 
     #Overrride this with your custom CleverReach credentials in Site-Package/Global configuration!
     credentials:
-      clientId: '' #CleverReach customer number
+      clientId: '' #CleverReach customer number or client id
+      clientSecret: '' #CleverReach client secret (optinal)
       login: '' #CleverReach username/email
       password: '' #CleverReach password
