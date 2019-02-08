@@ -1,6 +1,6 @@
 <div class="cleverreach">
     <div class="cleverreach__errors">
-        <f:form.validationResults>
+        <f:validation.results>
             <f:if condition="{validationResults.flattenedErrors}">
                 <div class="validation-results">
                     <f:for each="{validationResults.flattenedErrors}" key="propertyName" as="errors">
@@ -16,7 +16,7 @@
                     </f:for>
                 </div>
             </f:if>
-        </f:form.validationResults>
+        </f:validation.results>
     </div>
 
     <f:if condition="{node.properties.useAjax}">
