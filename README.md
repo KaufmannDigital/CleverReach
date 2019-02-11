@@ -11,8 +11,9 @@ The easiest way to install is running this command:
 composer require kaufmanndigital/cleverreach
 ```
 
-After successful installation, configure your CleverReach® credentials in the `Settings.yaml`:
+**After successful installation, you can configure your CleverReach® credentials in two ways:**
 
+**1. With clientId, login and password:**  
 ```yaml
 KaufmannDigital:
   CleverReach:
@@ -24,6 +25,18 @@ KaufmannDigital:
 Now please make sure that your user has API access: [Further Reading](https://support.cleverreach.de/hc/de/articles/115001544369-Der-Benutzer-hat-keinen-API-Zugriff)  
 
 **Note:** Sadly CleverReach® does not supply a static API-Key for your account. Thats why the package needs your credentials to get and renew the Token. Your credentials will only be transferd via HTTPS!
+
+**2. With oAuth-credentials:**  
+Since version 1.2.0 you can also use your oAuth credentials. You can create such at https://www.cleverreach.com/login (Menu "My Account" -> "REST API"). You need credentials for REST API V2.
+```yaml
+KaufmannDigital:
+  CleverReach:
+    credentials:
+      clientId: '<client-id>'
+      clientSecret: '<client-secret>'
+```
+<br>
+<br>
 
 **Optional:** If you want to use Ajax submitting your forms, please load the shipped JavaScript (jQuery needed) using `<script src="{f:uri.resource(path: 'JavaScript/Main.js', package: 'KaufmannDigital.CleverReach')}"></script>` inside your template or create your own Ajax-action.  
 
