@@ -53,7 +53,7 @@ class CleverReachApiService
             $this->apiToken = $this->cache->get('jwt');
         } else {
             $this->apiToken = $this->authenticate(
-                $this->settings['credentials']['clientId'],
+                $this->settings['credentials'],
                 $this->settings['credentials']['login'],
                 $this->settings['credentials']['password']
             );
@@ -187,21 +187,31 @@ class CleverReachApiService
     /**
      * Authenticate against the API to get a valid JWT
      *
-     * @param string $clientId
+     * @param array $client
      * @param string $login
      * @param string $password
      * @return string JWT
      * @throws AuthenticationFailedException
      */
-    private function authenticate($clientId, $login, $password)
+    private function authenticate($client, $login, $password)
     {
         try {
 
-            return $this->fireRequest('POST', 'login.json', [
-                'client_id' => $clientId,
-                'login' => $login,
-                'password' => $password
-            ]);
+            if (array_key_exists('clientSecret', $client)) {
+                $uri = new Uri($this->settings['oauthTokenEndpoint']);
+
+                return $this->callUri('POST', $uri, [
+                    'grant_type' => 'client_credentials',
+                    'client_id' => $client['clientId'],
+                    'client_secret' => $client['clientSecret'],
+                ])['access_token'];
+            } else {
+                return $this->fireRequest('POST', 'login.json', [
+                    'client_id' => $client['clientId'],
+                    'login' => $login,
+                    'password' => $password
+                ]);
+            }
 
         } catch (CleverReachException $e) {
             throw new AuthenticationFailedException('CleverReach authentication failed. Credentials correct?',
@@ -217,13 +227,29 @@ class CleverReachApiService
      * @param string $resource REST-Resource
      * @param array|null $arguments arguments for the request
      * @return mixed decoded response
-     * @throws ApiRequestException
-     * @throws NotFoundException
      */
     private function fireRequest($method, $resource, array $arguments = null)
     {
         //Build uri and set GET-Arguments
         $uri = new Uri($this->settings['apiEndpoint'] . '/' . $resource);
+
+        return $this->callUri($method, $uri, $arguments);
+    }
+
+
+    /**
+     * General method to fire API-Requests
+     *
+     * @param string $method HTTP method (GET/POST/PUT...)
+     * @param Uri $uri URI resource
+     * @param array|null $arguments arguments for the request
+     * @return mixed decoded response
+     * @throws ApiRequestException
+     * @throws NotFoundException
+     */
+    private function callUri($method, Uri $uri, array $arguments = null)
+    {
+        //Build uri and set GET-Arguments
         if ($method === 'GET' && $arguments !== null) {
             $uri->setQuery(http_build_query($arguments));
         }
