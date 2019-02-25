@@ -197,7 +197,7 @@ class CleverReachApiService
     {
         try {
 
-            if (array_key_exists('clientSecret', $client)) {
+            if (array_key_exists('clientSecret', $client) && !empty($client['clientSecret'])) {
                 $uri = new Uri($this->settings['oauthTokenEndpoint']);
 
                 return $this->callUri('POST', $uri, [
