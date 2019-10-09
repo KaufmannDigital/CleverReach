@@ -26,7 +26,7 @@ class CleverReachGroupsDataSource extends AbstractDataSource
     protected $apiService;
 
 
-    public function getData(NodeInterface $node = null, array $arguments)
+    public function getData(NodeInterface $node = null, array $arguments = [])
     {
         $groups = $this->apiService->getGroups();
 

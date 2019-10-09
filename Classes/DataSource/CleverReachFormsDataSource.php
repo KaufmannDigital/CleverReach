@@ -26,7 +26,7 @@ class CleverReachFormsDataSource extends AbstractDataSource
     protected $apiService;
 
 
-    public function getData(NodeInterface $node = null, array $arguments)
+    public function getData(NodeInterface $node = null, array $arguments = [])
     {
         $forms = $this->apiService->getForms();
         $data = [];

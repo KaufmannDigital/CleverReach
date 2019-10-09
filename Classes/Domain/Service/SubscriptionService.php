@@ -2,11 +2,10 @@
 
 namespace KaufmannDigital\CleverReach\Domain\Service;
 
-use KaufmannDigital\CleverReach\Domain\Model\ReceiverData;
+use GuzzleHttp\Psr7\ServerRequest;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Http\Request;
 use Neos\Flow\Validation\ValidatorResolver;
+use Neos\Flow\Annotations as Flow;
 
 /**
  * Class SubscriptionService
@@ -33,9 +32,9 @@ class SubscriptionService
     /**
      * @param array $receiverData
      * @param NodeInterface $registrationForm
-     * @param Request|null $httpRequest
+     * @param ServerRequest|null $httpRequest
      */
-    public function create(array $receiverData, NodeInterface $registrationForm, Request $httpRequest = null)
+    public function create(array $receiverData, NodeInterface $registrationForm, ServerRequest $httpRequest = null)
     {
         $groupId = $registrationForm->getProperty('groupId');
         $formId = $registrationForm->getProperty('formId');
@@ -48,7 +47,7 @@ class SubscriptionService
         //Send confirmation mail (if Doi activated)
         if ($useDOI === true) {
             $doiData = [
-                'user_ip' => $httpRequest->getClientIpAddress(),
+                'user_ip' => $httpRequest->getAttribute('clientIpAddress'),
                 'referer' => $httpRequest->getHeader('Referer'),
                 'user_agent' => $httpRequest->getHeader('User-Agent')
             ];

@@ -31,7 +31,7 @@ class SubscriptionController extends ActionController
     {
         $this->view->assign('node', $this->request->getInternalArgument('__node'));
         $httpRequest = $this->request->getHttpRequest();
-        $this->view->assign('sourceUrl', $httpRequest->getBaseUri() . $httpRequest->getRelativePath());
+        $this->view->assign('sourceUrl', (string)$httpRequest->getUri());
     }
 
     /**
