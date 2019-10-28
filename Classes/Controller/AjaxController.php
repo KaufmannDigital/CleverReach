@@ -53,7 +53,7 @@ class AjaxController extends RestController
     public function initializeAction()
     {
         $acceptLanguage = $this->request->getHttpRequest()->getHeader('Accept-Language');
-        $this->locale = $this->languageDetector->detectLocaleFromHttpHeader($acceptLanguage);
+        $this->locale = $this->languageDetector->detectLocaleFromHttpHeader($acceptLanguage[0]);
     }
 
     /**
@@ -72,12 +72,12 @@ class AjaxController extends RestController
                     ? $this->translateById('success-message-doi', 'RegistrationForm')
                     : $this->translateById('success-message', 'RegistrationForm')
             );
-            $this->response->setStatus(201);
+            $this->response->setStatusCode(201);
 
         } catch (CleverReachException $e) {
             $this->view->assign('success', false);
             $this->view->assign('message', $e->getMessage());
-            $this->response->setStatus(400);
+            $this->response->setStatusCode(400);
         }
 
         $this->view->setVariablesToRender(['success', 'message']);
@@ -89,7 +89,7 @@ class AjaxController extends RestController
      */
     public function errorAction()
     {
-        $this->response->setStatus(400);
+        $this->response->setStatusCode(400);
         $this->view->setVariablesToRender(['success', 'message']);
         $this->view->assign('success', false);
 
