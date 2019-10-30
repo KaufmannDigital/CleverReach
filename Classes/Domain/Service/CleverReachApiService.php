@@ -2,6 +2,7 @@
 
 namespace KaufmannDigital\CleverReach\Domain\Service;
 
+use GuzzleHttp\Psr7\Stream;
 use Neos\Flow\Annotations as Flow;
 use KaufmannDigital\CleverReach\Exception\ApiRequestException;
 use KaufmannDigital\CleverReach\Exception\AuthenticationFailedException;
@@ -10,8 +11,10 @@ use KaufmannDigital\CleverReach\Exception\NotFoundException;
 use Neos\Cache\Frontend\StringFrontend;
 use Neos\Flow\Cache\CacheManager;
 use Neos\Flow\Http\Client\CurlEngine;
-use Neos\Flow\Http\Request;
-use Neos\Flow\Http\Uri;
+use Neos\Flow\Http\Client\RequestEngineInterface;
+use Neos\Http\Factories\ServerRequestFactory;
+use GuzzleHttp\Psr7\Uri;
+use Neos\Http\Factories\StreamFactory;
 
 class CleverReachApiService
 {
@@ -27,6 +30,20 @@ class CleverReachApiService
      * @var CurlEngine
      */
     protected $requestEngine;
+
+
+    /**
+     * @Flow\Inject
+     * @var ServerRequestFactory
+     */
+    protected $serverRequestFactory;
+
+
+    /**
+     * @Flow\Inject
+     * @var StreamFactory
+     */
+    protected $streamFactory;
 
     /**
      * @var StringFrontend
@@ -275,18 +292,18 @@ class CleverReachApiService
         }
 
         //Create request and set header
-        $request = Request::create($uri, $method);
-        $request->setHeader('Content-Type', 'application/json; charset=utf-8');
-        $request->setHeader('Authorization', 'Bearer ' . $this->apiToken);
+        $request = $this->serverRequestFactory->createServerRequest($method, $uri)
+            ->withHeader('Content-Type', 'application/json; charset=utf-8')
+            ->withHeader('Authorization','Bearer ' . $this->apiToken);
 
-        //Set arguments to content, if no GET-Request
-        if ($method !== 'GET' && $arguments !== null) {
-            $request->setContent(json_encode($arguments));
-        }
+        //Set body, if needed
+        $request = $method !== 'GET' && $arguments !== null
+            ? $request->withBody($this->streamFactory->createStream(json_encode($arguments)))
+            : $request;
 
-        //Send request and decode response
+        //Fire request and get response-body
         $response = $this->requestEngine->sendRequest($request);
-        $decodedResponse = json_decode($response->getContent(), true);
+        $decodedResponse = json_decode($response->getBody()->getContents(), true);
 
         //Success? Return data
         if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
