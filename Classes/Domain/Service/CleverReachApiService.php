@@ -2,7 +2,6 @@
 
 namespace KaufmannDigital\CleverReach\Domain\Service;
 
-use GuzzleHttp\Psr7\Stream;
 use Neos\Flow\Annotations as Flow;
 use KaufmannDigital\CleverReach\Exception\ApiRequestException;
 use KaufmannDigital\CleverReach\Exception\AuthenticationFailedException;
@@ -11,7 +10,6 @@ use KaufmannDigital\CleverReach\Exception\NotFoundException;
 use Neos\Cache\Frontend\StringFrontend;
 use Neos\Flow\Cache\CacheManager;
 use Neos\Flow\Http\Client\CurlEngine;
-use Neos\Flow\Http\Client\RequestEngineInterface;
 use Neos\Http\Factories\ServerRequestFactory;
 use GuzzleHttp\Psr7\Uri;
 use Neos\Http\Factories\StreamFactory;
@@ -84,7 +82,7 @@ class CleverReachApiService
     /**
      * @return array
      */
-    public function getGlobalAttributes() : array
+    public function getGlobalAttributes(): array
     {
         try {
             $response = $this->fireRequest('GET', 'attributes');
@@ -182,7 +180,8 @@ class CleverReachApiService
 
 
     /**
-     * Adds a new receiver tp $groupId
+     * Adds a new receiver to $groupId
+     *
      * @param array $receiverData Array of receiverData. Key "email" is required (see CleverReach API Docs)
      * @param int $groupId
      * @param bool $activate
@@ -202,12 +201,13 @@ class CleverReachApiService
 
 
     /**
-     * Updates or adds a new receiver tp $groupId
+     * Updates or adds a new receiver to $groupId
+     *
      * @param array $receiverData Array of receiverData. Key "email" is required (see CleverReach API Docs)
      * @param int $groupId
      * @param bool $activate
      */
-    public function addOrUpdateReceiver(array $receiverData, $groupId, $activate = true)
+    public function addOrUpdateReceiver(array $receiverData, int $groupId, bool $activate = true): void
     {
         if ($activate !== true) {
             $receiverData['deactivated'] = time();
@@ -294,7 +294,7 @@ class CleverReachApiService
         //Create request and set header
         $request = $this->serverRequestFactory->createServerRequest($method, $uri)
             ->withHeader('Content-Type', 'application/json; charset=utf-8')
-            ->withHeader('Authorization','Bearer ' . $this->apiToken);
+            ->withHeader('Authorization', 'Bearer ' . $this->apiToken);
 
         //Set body, if needed
         $request = $method !== 'GET' && $arguments !== null
