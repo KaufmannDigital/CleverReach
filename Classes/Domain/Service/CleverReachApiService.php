@@ -222,10 +222,10 @@ class CleverReachApiService
 
     /**
      * Remove a receiver tp $groupId
-     * @param $receiverIdOrEmail
+     * @param string $receiverIdOrEmail
      * @param int $groupId
      */
-    public function removeReceiver($receiverIdOrEmail, $groupId)
+    public function removeReceiver(string $receiverIdOrEmail, int $groupId): void
     {
         $this->fireRequest(
             'DELETE',
