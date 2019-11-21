@@ -220,6 +220,19 @@ class CleverReachApiService
         );
     }
 
+    /**
+     * Remove a receiver tp $groupId
+     * @param string $receiverIdOrEmail
+     * @param int $groupId
+     */
+    public function removeReceiver(string $receiverIdOrEmail, int $groupId): void
+    {
+        $this->fireRequest(
+            'DELETE',
+            'groups.json/' . $groupId . '/receivers/' . $receiverIdOrEmail
+        );
+    }
+
 
     /**
      * Authenticate against the API to get a valid JWT
