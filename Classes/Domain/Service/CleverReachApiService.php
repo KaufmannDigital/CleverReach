@@ -233,6 +233,18 @@ class CleverReachApiService
         );
     }
 
+    /**
+     * Deactivate a receiver in a group
+     * @param string $receiverIdOrEmail
+     * @param int $groupId
+     */
+    public function deactivateReceiver(string $receiverIdOrEmail, int $groupId): void
+    {
+        $this->fireRequest(
+            'PUT',
+            'groups.json/' . $groupId . '/receivers/' . $receiverIdOrEmail . '/deactivate'
+        );
+    }
 
     /**
      * Authenticate against the API to get a valid JWT
