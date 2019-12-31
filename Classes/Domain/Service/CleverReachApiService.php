@@ -242,7 +242,7 @@ class CleverReachApiService
     {
         $this->fireRequest(
             'PUT',
-            'groups.json/' . $groupId . '/receivers/' . $receiverIdOrEmail . '/deactivate'
+            'groups.json/' . $groupId . '/receivers/' . $receiverIdOrEmail . '/setinactive'
         );
     }
 
