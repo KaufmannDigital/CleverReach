@@ -32,25 +32,25 @@
 </div>
 
 <f:section name="standard">
-    <f:form action="subscribe" method="post" class="cleverreach__form">
+    <f:form action="{formAction}" method="post" class="cleverreach__form">
         <f:form.textfield name="receiverData[email]" placeholder="{f:translate(id: 'email.placeholder', source: 'RegistrationForm')}"/>
 
         <f:form.hidden name="receiverData[source]" value="{sourceUrl}"/>
         <f:form.hidden name="receiverData[groupId]" value="{node.properties.groupId}"/>
 
-        <f:form.submit value="{f:translate(id: 'submit.value', source: 'RegistrationForm')}"/>
+        <f:form.submit value="{f:translate(id: 'button.submit.{formAction}', source: 'RegistrationForm')}"/>
     </f:form>
 </f:section>
 
 
 <f:section name="ajax">
-    <form action="{f:uri.action(action: 'subscribe', controller: 'Ajax', package: 'KaufmannDigital.CleverReach', useParentRequest: true, absolute: true)}" method="post" class="cleverreach__form cleverreach__form--ajax">
+    <form action="{f:uri.action(action: formAction, controller: 'Ajax', package: 'KaufmannDigital.CleverReach', useParentRequest: true, absolute: true)}" method="post" class="cleverreach__form cleverreach__form--ajax">
         <input type="text" name="receiverData[email]" placeholder="{f:translate(id: 'email.placeholder', source: 'RegistrationForm')}" />
 
         <input type="hidden" name="receiverData[source]" value="{sourceUrl}"/>
         <input type="hidden" name="receiverData[groupId]" value="{node.properties.groupId}"/>
         <input type="hidden" name="registrationForm" value="{node.contextPath}"/>
 
-        <input type="submit" value="{f:translate(id: 'submit.value', source: 'RegistrationForm')}"/>
+        <input type="submit" value="{f:translate(id: 'button.submit.{formAction}', source: 'RegistrationForm')}"/>
     </form>
 </f:section>

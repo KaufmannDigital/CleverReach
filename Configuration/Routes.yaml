@@ -1,10 +1,21 @@
 -
   name: 'REST API'
-  uriPattern: 'cleverreach/receiver'
+  uriPattern: 'cleverreach/subscribe'
   httpMethods: ['POST', 'PUT']
   defaults:
     '@package':    'KaufmannDigital.CleverReach'
     '@controller': 'Ajax'
     '@action':     'subscribe'
+    '@format':     'html'
+  appendExceedingArguments: true
+
+-
+  name: 'REST API'
+  uriPattern: 'cleverreach/unsubscribe'
+  httpMethods: ['POST', 'PUT', 'DELETE']
+  defaults:
+    '@package':    'KaufmannDigital.CleverReach'
+    '@controller': 'Ajax'
+    '@action':     'unsubscribe'
     '@format':     'html'
   appendExceedingArguments: true

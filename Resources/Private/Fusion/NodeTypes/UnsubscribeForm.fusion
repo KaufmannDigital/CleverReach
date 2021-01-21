@@ -1,0 +1,5 @@
+prototype(KaufmannDigital.CleverReach:UnsubscribeForm) < prototype(Neos.Neos:Plugin) {
+    package = 'KaufmannDigital.CleverReach'
+    controller = 'Subscription'
+    action = 'index'
+}

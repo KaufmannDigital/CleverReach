@@ -9,9 +9,11 @@
                                 <source>No valid list ID was supplied. Please contact Webmaster.</source>
                         </trans-unit>
                         <trans-unit id="1504541582" xml:space="preserve">
-                                <source>This email address is already in our list of receivers.</source>
+                                <source>This email address is already in our list of recipients.</source>
                         </trans-unit>
-
+                        <trans-unit id="1504541583" xml:space="preserve">
+                                <source>This e-mail address is not in the list of recipients.</source>
+                        </trans-unit>
                 </body>
         </file>
 </xliff>

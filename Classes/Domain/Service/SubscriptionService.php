@@ -34,7 +34,7 @@ class SubscriptionService
      * @param NodeInterface $registrationForm
      * @param ServerRequest|null $httpRequest
      */
-    public function create(array $receiverData, NodeInterface $registrationForm, ServerRequest $httpRequest = null)
+    public function subscribe(array $receiverData, NodeInterface $registrationForm, ServerRequest $httpRequest = null)
     {
         $groupId = $registrationForm->getProperty('groupId');
         $formId = $registrationForm->getProperty('formId');
@@ -42,7 +42,6 @@ class SubscriptionService
 
         //Add user to list
         $this->apiService->addReceiver($receiverData, $groupId, !$useDOI);
-
 
         //Send confirmation mail (if Doi activated)
         if ($useDOI === true) {
@@ -53,9 +52,32 @@ class SubscriptionService
             ];
 
             $this->apiService->sendDoubleOptInMail($receiverData['email'], $groupId, $formId, $doiData);
-
         }
+    }
 
+    /**
+     * @param array $receiverData
+     * @param NodeInterface $registrationForm
+     * @param ServerRequest|null $httpRequest
+     */
+    public function unsubscribe(array $receiverData, NodeInterface $registrationForm, ServerRequest $httpRequest = null)
+    {
+        $groupId = $registrationForm->getProperty('groupId');
+        $formId = $registrationForm->getProperty('formId');
+        $useDOI = $registrationForm->getProperty('useDOI');
+
+        //Send confirmation mail (if Doi activated)
+        if ($useDOI === true) {
+            $doiData = [
+                'user_ip' => $httpRequest->getAttribute('clientIpAddress'),
+                'referer' => $httpRequest->getHeader('Referer'),
+                'user_agent' => $httpRequest->getHeader('User-Agent')
+            ];
+
+            $this->apiService->sendDoubleOptOutMail($receiverData['email'], $groupId, $formId, $doiData);
+        } else {
+            $this->apiService->removeReceiver($receiverData['email'], $groupId);
+        }
     }
 
 }

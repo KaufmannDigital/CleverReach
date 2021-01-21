@@ -5,14 +5,23 @@
                         <trans-unit id="email.placeholder" xml:space="preserve">
                                 <source>name@domain.de</source>
                         </trans-unit>
-                        <trans-unit id="submit.value" xml:space="preserve">
+                        <trans-unit id="button.submit.subscribe" xml:space="preserve">
                                 <source>Anmelden</source>
                         </trans-unit>
+                        <trans-unit id="button.submit.unsubscribe" xml:space="preserve">
+                                <source>Abmelden</source>
+                        </trans-unit>
                         <trans-unit id="success-message" xml:space="preserve">
-                                <source>Vielen Dank, Ihre E-Mail-Adresse wurde zu unserer Liste hinzugefügt!</source>
+                                <source>Vielen Dank, Ihre E-Mail-Adresse wurde zu unserer Liste hinzugefügt.</source>
                         </trans-unit>
                         <trans-unit id="success-message-doi" xml:space="preserve">
                                 <source>Vielen Dank! Sie bekommen nun eine E-Mail mit Bestätigungslink. Folgen Sie diesem bitte, um die Anmeldung abzuschließen.</source>
+                        </trans-unit>
+                        <trans-unit id="success-message-unsubscribe" xml:space="preserve">
+                                <source>Sie haben sich erfolgreich abgemeldet.</source>
+                        </trans-unit>
+                        <trans-unit id="success-message-unsubscribe-double-opt-out" xml:space="preserve">
+                                <source>Wir haben Ihnen gerade eine E-Mail geschickt. Bitte bestätigen Sie Ihre Abmeldung mit einem Klick auf den Link in dieser E-Mail.</source>
                         </trans-unit>
                 </body>
         </file>
