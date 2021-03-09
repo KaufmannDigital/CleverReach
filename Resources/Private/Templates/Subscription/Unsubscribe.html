@@ -1,0 +1,10 @@
+<p>
+	<f:if condition="{usedDOI}">
+		<f:then>
+			{f:translate(id: 'success-message-unsubscribe-double-opt-out', source: 'RegistrationForm')}
+		</f:then>
+		<f:else>
+			{f:translate(id: 'success-message-unsubscribe', source: 'RegistrationForm')}
+		</f:else>
+	</f:if>
+</p>

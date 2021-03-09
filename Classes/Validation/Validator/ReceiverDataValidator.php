@@ -38,10 +38,5 @@ class ReceiverDataValidator extends AbstractValidator
 
             return; //We can exit here, if there is no valid groupId.
         }
-
-        if ($this->apiService->isReceiverInGroup($value['email'], $value['groupId'])) {
-            $this->addError('This email address is already in our list', 1504541582);
-        }
-
     }
 }

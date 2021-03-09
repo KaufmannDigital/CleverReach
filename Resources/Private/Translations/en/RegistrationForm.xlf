@@ -5,15 +5,26 @@
                         <trans-unit id="email.placeholder" xml:space="preserve">
                                 <source>you@domain.com</source>
                         </trans-unit>
-                        <trans-unit id="submit.value" xml:space="preserve">
-                                <source>Register</source>
+
+                    <trans-unit id="button.submit.subscribe" xml:space="preserve">
+                                <source>Subscribe</source>
+                        </trans-unit>
+                        <trans-unit id="button.submit.unsubscribe" xml:space="preserve">
+                                <source>Unsubscribe</source>
                         </trans-unit>
 
                         <trans-unit id="success-message" xml:space="preserve">
-                                <source>Thanks, your email address was added to our list!</source>
+                                <source>Thanks, your email address was added to our list.</source>
                         </trans-unit>
                         <trans-unit id="success-message-doi" xml:space="preserve">
                                 <source>Thanks! You will now receive a confirmation mail. Please click on the link to confirm your subscription.</source>
+                        </trans-unit>
+
+                        <trans-unit id="success-message-unsubscribe" xml:space="preserve">
+                                <source>You have successfully unsubscribed.</source>
+                        </trans-unit>
+                        <trans-unit id="success-message-unsubscribe-double-opt-out" xml:space="preserve">
+                                <source>We have just sent you an email. Please confirm your unsubscription by clicking on the link in this email.</source>
                         </trans-unit>
                 </body>
         </file>

@@ -11,6 +11,9 @@
                         <trans-unit id="1504541582" xml:space="preserve">
                                 <source>Diese E-Mail Adresse befindet sich schon in der Liste von Empfängern.</source>
                         </trans-unit>
+                        <trans-unit id="1504541583" xml:space="preserve">
+                                <source>Diese E-Mail Adresse befindet sich nicht in der Liste von Empfängern.</source>
+                        </trans-unit>
                 </body>
         </file>
 </xliff>

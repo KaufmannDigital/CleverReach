@@ -180,6 +180,24 @@ class CleverReachApiService
         $this->fireRequest('POST', 'forms.json/' . $formId . '/send/activate', $arguments);
     }
 
+    /**
+     * Sends the Double-Opt-Out E-Mail configured in $formId to $email
+     *
+     * @param string $email
+     * @param integer $formId
+     * @param integer $groupId
+     * @param array $doiData
+     */
+    public function sendDoubleOptOutMail($email, $groupId, $formId, array $doiData)
+    {
+        $arguments = [
+            'email' => $email,
+            'groups_id' => $groupId,
+            'doidata' => $doiData
+        ];
+
+        $this->fireRequest('POST', 'forms.json/' . $formId . '/send/deactivate', $arguments);
+    }
 
     /**
      * Adds a new receiver to $groupId

@@ -3,10 +3,10 @@
         <file original="" product-name="KaufmannDigital.CleverReach" source-language="de" datatype="plaintext">
                 <body>
                         <trans-unit id="ui.label" xml:space="preserve">
-                                <source>CleverReach Newsletter Anmeldung</source>
+                                <source>CleverReach Formular</source>
                         </trans-unit>
                         <trans-unit id="ui.help.message" xml:space="preserve">
-                                <source>Ein Formular zur Anmeldung an CleverReach Gruppen</source>
+                                <source>Ein Formular zur Anmeldung oder Abmeldung an CleverReach Gruppen</source>
                         </trans-unit>
                         <trans-unit id="tabs.cleverreach" xml:space="preserve">
                                 <source>CleverReach Einstellungen</source>
@@ -24,13 +24,22 @@
                                 <source>Formular</source>
                         </trans-unit>
                         <trans-unit id="properties.formId.ui.help.message" xml:space="preserve">
-                                <source>Für die Verwendung von DOI müssen Sie ein Formular auswählen, welches für den Versand genutzt wrid.</source>
+                                <source>Für die Verwendung von Double-Opt-In / Double-Opt-Out müssen Sie ein Formular auswählen, welches für den Versand genutzt wrid.</source>
                         </trans-unit>
                         <trans-unit id="properties.useDOI" xml:space="preserve">
-                                <source>DOI (Double-Opt-In) nutzen</source>
+                                <source>Verifizierung erforderlich (Double-Opt-In / Double-Opt-Out)</source>
                         </trans-unit>
                         <trans-unit id="properties.useAjax" xml:space="preserve">
-                                <source>Ajax zum absenden nutzen</source>
+                                <source>Ajax zum Absenden nutzen</source>
+                        </trans-unit>
+                        <trans-unit id="properties.formAction" xml:space="preserve">
+                                <source>Aktion</source>
+                        </trans-unit>
+                        <trans-unit id="properties.formAction.selectBoxEditor.values.subscribe" xml:space="preserve">
+                                <source>Anmeldung</source>
+                        </trans-unit>
+                        <trans-unit id="properties.formAction.selectBoxEditor.values.unsubscribe" xml:space="preserve">
+                                <source>Abmeldung</source>
                         </trans-unit>
                 </body>
         </file>

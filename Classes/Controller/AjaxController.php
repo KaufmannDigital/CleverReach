@@ -58,19 +58,48 @@ class AjaxController extends RestController
 
     /**
      * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverData")
+     * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverNotExistsInGroup")
      * @param array $receiverData
      * @param NodeInterface $registrationForm
      */
     public function subscribeAction(array $receiverData, NodeInterface $registrationForm)
     {
         try {
-            $this->subscriptionService->create($receiverData, $registrationForm, $this->request->getHttpRequest());
+            $this->subscriptionService->subscribe($receiverData, $registrationForm, $this->request->getHttpRequest());
 
             $this->view->assign('success', true);
             $this->view->assign('message',
                 $registrationForm->getProperty('useDOI')
                     ? $this->translateById('success-message-doi', 'RegistrationForm')
                     : $this->translateById('success-message', 'RegistrationForm')
+            );
+            $this->response->setStatusCode(201);
+
+        } catch (CleverReachException $e) {
+            $this->view->assign('success', false);
+            $this->view->assign('message', $e->getMessage());
+            $this->response->setStatusCode(400);
+        }
+
+        $this->view->setVariablesToRender(['success', 'message']);
+    }
+
+    /**
+     * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverData")
+     * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverExistsInGroup")
+     * @param array $receiverData
+     * @param NodeInterface $registrationForm
+     */
+    public function unsubscribeAction(array $receiverData, NodeInterface $registrationForm)
+    {
+        try {
+            $this->subscriptionService->unsubscribe($receiverData, $registrationForm, $this->request->getHttpRequest());
+
+            $this->view->assign('success', true);
+            $this->view->assign('message',
+                $registrationForm->getProperty('useDOI')
+                    ? $this->translateById('success-message-unsubscribe-double-opt-out', 'RegistrationForm')
+                    : $this->translateById('success-message-unsubscribe', 'RegistrationForm')
             );
             $this->response->setStatusCode(201);
 

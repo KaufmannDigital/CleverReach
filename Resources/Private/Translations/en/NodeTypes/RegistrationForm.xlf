@@ -3,10 +3,10 @@
         <file original="" product-name="KaufmannDigital.CleverReach" source-language="en" datatype="plaintext">
                 <body>
                         <trans-unit id="ui.label" xml:space="preserve">
-                                <source>CleverReach registration form</source>
+                                <source>CleverReach Form</source>
                         </trans-unit>
                         <trans-unit id="ui.help.message" xml:space="preserve">
-                                <source>A form to register an email address to a CleverReach group.</source>
+                                <source>A form to register or revoke an email address of a CleverReach group.</source>
                         </trans-unit>
                         <trans-unit id="tabs.cleverreach" xml:space="preserve">
                                 <source>CleverReach settings</source>
@@ -18,7 +18,7 @@
                                 <source>Group</source>
                         </trans-unit>
                         <trans-unit id="properties.groupId.ui.help.message" xml:space="preserve">
-                                <source>Receivers will be added to this group</source>
+                                <source>Receivers will be added or removed from this group</source>
                         </trans-unit>
                         <trans-unit id="properties.formId" xml:space="preserve">
                                 <source>Form</source>
@@ -27,10 +27,19 @@
                                 <source>If you want to use DOI, you have to specify the form which should be used for.</source>
                         </trans-unit>
                         <trans-unit id="properties.useDOI" xml:space="preserve">
-                                <source>Enable DOI (Double-Opt-In)</source>
+                                <source>Enable Verification (Double-Opt-In / Double-Opt-Out)</source>
                         </trans-unit>
                         <trans-unit id="properties.useAjax" xml:space="preserve">
                                 <source>Use ajax to submit this form</source>
+                        </trans-unit>
+                        <trans-unit id="properties.formAction" xml:space="preserve">
+                                <source>Action</source>
+                        </trans-unit>
+                        <trans-unit id="properties.formAction.selectBoxEditor.values.subscribe" xml:space="preserve">
+                                <source>Subscription</source>
+                        </trans-unit>
+                        <trans-unit id="properties.formAction.selectBoxEditor.values.unsubscribe" xml:space="preserve">
+                                <source>Unsubscription</source>
                         </trans-unit>
                 </body>
         </file>

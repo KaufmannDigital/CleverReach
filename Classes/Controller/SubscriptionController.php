@@ -29,13 +29,22 @@ class SubscriptionController extends ActionController
      */
     public function indexAction()
     {
-        $this->view->assign('node', $this->request->getInternalArgument('__node'));
+        $node = $this->request->getInternalArgument('__node');
+        $this->view->assign('node', $node);
+
+        if($node->getProperty('formAction') != '') {
+            $this->view->assign('formAction', $node->getProperty('formAction'));
+        } else {
+            $this->view->assign('formAction', 'subscribe');
+        }
+
         $httpRequest = $this->request->getHttpRequest();
         $this->view->assign('sourceUrl', (string)$httpRequest->getUri());
     }
 
     /**
      * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverData")
+     * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverNotExistsInGroup")
      * @param array $receiverData
      */
     public function subscribeAction(array $receiverData)
@@ -43,7 +52,22 @@ class SubscriptionController extends ActionController
         /** @var NodeInterface $registrationForm */
         $registrationForm = $this->request->getInternalArgument('__node');
 
-        $this->subscriptionService->create($receiverData, $registrationForm, $this->request->getHttpRequest());
+        $this->subscriptionService->subscribe($receiverData, $registrationForm, $this->request->getHttpRequest());
+
+        $this->view->assign('usedDOI', $registrationForm->getProperty('useDOI'));
+    }
+
+    /**
+     * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverData")
+     * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverExistsInGroup")
+     * @param array $receiverData
+     */
+    public function unsubscribeAction(array $receiverData)
+    {
+        /** @var NodeInterface $registrationForm */
+        $registrationForm = $this->request->getInternalArgument('__node');
+
+        $this->subscriptionService->unsubscribe($receiverData, $registrationForm, $this->request->getHttpRequest());
 
         $this->view->assign('usedDOI', $registrationForm->getProperty('useDOI'));
     }
