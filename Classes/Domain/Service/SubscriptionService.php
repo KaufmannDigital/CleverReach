@@ -68,7 +68,7 @@ class SubscriptionService
         //Send confirmation mail (if Doi activated)
         if ($useDOI === true) {
             $doiData = [
-                'user_ip' => $httpRequest->getAttribute('clientIpAddress'),
+                'user_ip' => $httpRequest->getServerParams()['X_FORWARDED_FOR'] ?? $httpRequest->getServerParams()['REMOTE_ADDR'],
                 'referer' => $httpRequest->getHeader('Referer'),
                 'user_agent' => $httpRequest->getHeader('User-Agent')
             ];
