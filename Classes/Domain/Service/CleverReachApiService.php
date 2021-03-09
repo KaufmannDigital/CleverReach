@@ -2,6 +2,8 @@
 
 namespace KaufmannDigital\CleverReach\Domain\Service;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use Neos\Flow\Annotations as Flow;
 use KaufmannDigital\CleverReach\Exception\ApiRequestException;
 use KaufmannDigital\CleverReach\Exception\AuthenticationFailedException;
@@ -316,18 +318,19 @@ class CleverReachApiService
             $uri->setQuery(http_build_query($arguments));
         }
 
-        //Create request and set header
-        $request = $this->serverRequestFactory->createServerRequest($method, $uri)
-            ->withHeader('Content-Type', 'application/json; charset=utf-8')
-            ->withHeader('Authorization', 'Bearer ' . $this->apiToken);
-
-        //Set body, if needed
-        $request = $method !== 'GET' && $arguments !== null
-            ? $request->withBody($this->streamFactory->createStream(json_encode($arguments)))
-            : $request;
+        $request = new Request(
+            $method,
+            $uri,
+            [
+                'Content-Type' => 'application/json; charset=utf-8',
+                'Authorization' => 'Bearer ' . $this->apiToken
+            ],
+            $method !== 'GET' ? \GuzzleHttp\json_encode($arguments) : null
+        );
 
         //Fire request and get response-body
-        $response = $this->requestEngine->sendRequest($request);
+        $client = new Client();
+        $response = $client->send($request);
         $decodedResponse = json_decode($response->getBody()->getContents(), true);
 
         //Success? Return data
