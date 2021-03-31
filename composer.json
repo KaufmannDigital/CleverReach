@@ -5,7 +5,8 @@
     "homepage": "https://www.kaufmann.digital",
     "license": "GPL-3.0-or-later",
     "require": {
-        "neos/neos": "^5.0"
+        "neos/neos": "^5.0",
+        "guzzlehttp/guzzle": "*"
     },
     "autoload": {
         "psr-4": {
