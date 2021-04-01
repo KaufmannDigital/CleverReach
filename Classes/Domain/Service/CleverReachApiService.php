@@ -3,6 +3,7 @@
 namespace KaufmannDigital\CleverReach\Domain\Service;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use Neos\Flow\Annotations as Flow;
 use KaufmannDigital\CleverReach\Exception\ApiRequestException;
@@ -147,6 +148,7 @@ class CleverReachApiService
      * @param string $email email to check
      * @param int $groupId group to check
      * @return bool
+     * @throws ApiRequestException
      */
     public function isReceiverInGroup($email, $groupId)
     {
@@ -309,6 +311,8 @@ class CleverReachApiService
      * @param string $resource REST-Resource
      * @param array|null $arguments arguments for the request
      * @return mixed decoded response
+     * @throws ApiRequestException
+     * @throws NotFoundException
      */
     private function fireRequest($method, $resource, array $arguments = null)
     {
@@ -327,7 +331,7 @@ class CleverReachApiService
      * @param array|null $arguments arguments for the request
      * @return mixed decoded response
      * @throws ApiRequestException
-     * @throws NotFoundException
+     * @throws NotFoundException|GuzzleException
      */
     private function callUri($method, Uri $uri, array $arguments = null)
     {
@@ -348,7 +352,7 @@ class CleverReachApiService
 
         //Fire request and get response-body
         $client = new Client();
-        $response = $client->send($request);
+        $response = $client->send($request, ['http_errors' => false]);
         $decodedResponse = json_decode($response->getBody()->getContents(), true);
 
         //Success? Return data
