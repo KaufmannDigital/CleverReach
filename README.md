@@ -11,23 +11,10 @@ The easiest way to install is running this command:
 composer require kaufmanndigital/cleverreach
 ```
 
-**After successful installation, you can configure your CleverReach® credentials in two ways:**
+**After successful installation, configure your CleverReach® credentials with oAuth-credentials:**
 
-**1. With clientId, login and password:**  
-```yaml
-KaufmannDigital:
-  CleverReach:
-    credentials:
-      clientId: '' #CleverReach customer number
-      login: '' #CleverReach username/email
-      password: '' #CleverReach password
-```
-Now please make sure that your user has API access: [Further Reading](https://support.cleverreach.de/hc/de/articles/115001544369-Der-Benutzer-hat-keinen-API-Zugriff)  
+You can create such credentials at https://www.cleverreach.com/login (Menu "My Account" -> "REST API"). **You need credentials for REST API V3.**
 
-**Note:** Sadly CleverReach® does not supply a static API-Key for your account. Thats why the package needs your credentials to get and renew the Token. Your credentials will only be transferd via HTTPS!
-
-**2. With oAuth-credentials:**  
-Since version 1.2.0 you can also use your oAuth credentials. You can create such at https://www.cleverreach.com/login (Menu "My Account" -> "REST API"). You need credentials for REST API V2.
 ```yaml
 KaufmannDigital:
   CleverReach:
