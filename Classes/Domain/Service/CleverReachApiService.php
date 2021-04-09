@@ -71,9 +71,7 @@ class CleverReachApiService
             $this->apiToken = $this->cache->get('jwt');
         } else {
             $this->apiToken = $this->authenticate(
-                $this->settings['credentials'],
-                $this->settings['credentials']['login'],
-                $this->settings['credentials']['password']
+                $this->settings['credentials']
             );
 
             //Cache the token for 30 days
@@ -99,11 +97,12 @@ class CleverReachApiService
      * Returns all groups
      *
      * @return array Groups as Array
+     * @throws ApiRequestException
+     * @throws NotFoundException
      */
     public function getGroups()
     {
         return $this->fireRequest('GET', 'groups.json');
-
     }
 
     /**
@@ -154,12 +153,10 @@ class CleverReachApiService
     {
         try {
             $result = $this->fireRequest('GET', 'groups.json/' . $groupId . '/receivers/' . $email);
-
             return true;
         } catch (NotFoundException $e) {
             return false;
         }
-
     }
 
     /**
@@ -167,14 +164,14 @@ class CleverReachApiService
      *
      * @param string $email
      * @param integer $formId
-     * @param integer $groupId
      * @param array $doiData
+     * @throws ApiRequestException
+     * @throws NotFoundException
      */
-    public function sendDoubleOptInMail($email, $groupId, $formId, array $doiData)
+    public function sendDoubleOptInMail($email, $formId, array $doiData)
     {
         $arguments = [
             'email' => $email,
-            'groups_id' => $groupId,
             'doidata' => $doiData
         ];
 
@@ -187,14 +184,14 @@ class CleverReachApiService
      *
      * @param string $email
      * @param integer $formId
-     * @param integer $groupId
      * @param array $doiData
+     * @throws ApiRequestException
+     * @throws NotFoundException
      */
-    public function sendDoubleOptOutMail($email, $groupId, $formId, array $doiData)
+    public function sendDoubleOptOutMail($email, $formId, array $doiData)
     {
         $arguments = [
             'email' => $email,
-            'groups_id' => $groupId,
             'doidata' => $doiData
         ];
 
@@ -207,6 +204,8 @@ class CleverReachApiService
      * @param array $receiverData Array of receiverData. Key "email" is required (see CleverReach API Docs)
      * @param int $groupId
      * @param bool $activate
+     * @throws ApiRequestException
+     * @throws NotFoundException
      */
     public function addReceiver(array $receiverData, $groupId, $activate = true)
     {
@@ -217,7 +216,7 @@ class CleverReachApiService
         $this->fireRequest(
             'POST',
             'groups.json/' . $groupId . '/receivers/insert',
-            $receiverData
+            [$receiverData]
         );
     }
 
@@ -264,7 +263,7 @@ class CleverReachApiService
     {
         $this->fireRequest(
             'PUT',
-            'groups.json/' . $groupId . '/receivers/' . $receiverIdOrEmail . '/setinactive'
+            'groups.json/' . $groupId . '/receivers/' . $receiverIdOrEmail . '/deactivate'
         );
     }
 
@@ -272,15 +271,12 @@ class CleverReachApiService
      * Authenticate against the API to get a valid JWT
      *
      * @param array $client
-     * @param string $login
-     * @param string $password
      * @return string JWT
-     * @throws AuthenticationFailedException
+     * @throws AuthenticationFailedException|GuzzleException
      */
-    private function authenticate($client, $login, $password)
+    private function authenticate($client)
     {
         try {
-
             if (array_key_exists('clientSecret', $client) && !empty($client['clientSecret'])) {
                 $uri = new Uri($this->settings['oauthTokenEndpoint']);
 
@@ -289,14 +285,7 @@ class CleverReachApiService
                     'client_id' => $client['clientId'],
                     'client_secret' => $client['clientSecret'],
                 ])['access_token'];
-            } else {
-                return $this->fireRequest('POST', 'login.json', [
-                    'client_id' => $client['clientId'],
-                    'login' => $login,
-                    'password' => $password
-                ]);
             }
-
         } catch (CleverReachException $e) {
             throw new AuthenticationFailedException('CleverReach authentication failed. Credentials correct?',
                 1485944436);

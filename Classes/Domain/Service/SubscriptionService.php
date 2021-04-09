@@ -50,7 +50,7 @@ class SubscriptionService
                 'user_agent' => $httpRequest->getHeader('User-Agent')
             ];
 
-            $this->apiService->sendDoubleOptInMail($receiverData['email'], $groupId, $formId, $doiData);
+            $this->apiService->sendDoubleOptInMail($receiverData['email'], $formId, $doiData);
         }
     }
 
@@ -73,7 +73,7 @@ class SubscriptionService
                 'user_agent' => $httpRequest->getHeader('User-Agent')
             ];
 
-            $this->apiService->sendDoubleOptOutMail($receiverData['email'], $groupId, $formId, $doiData);
+            $this->apiService->sendDoubleOptOutMail($receiverData['email'], $formId, $doiData);
         } else {
             $this->apiService->removeReceiver($receiverData['email'], $groupId);
         }
