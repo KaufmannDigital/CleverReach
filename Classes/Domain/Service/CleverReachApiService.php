@@ -160,6 +160,18 @@ class CleverReachApiService
     }
 
     /**
+     * @param string $email
+     * @param int $groupId
+     * @return array
+     * @throws ApiRequestException
+     * @throws NotFoundException
+     */
+    public function getReceiverFromGroup(string $email, int $groupId)
+    {
+        return $this->fireRequest('GET', 'groups.json/' . $groupId . '/receivers/' . $email);
+    }
+
+    /**
      * Sends the Double-Opt-In E-Mail configured in $formId to $email
      *
      * @param string $email

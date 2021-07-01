@@ -3,6 +3,7 @@
 namespace KaufmannDigital\CleverReach\Domain\Service;
 
 use GuzzleHttp\Psr7\ServerRequest;
+use KaufmannDigital\CleverReach\Exception\NotFoundException;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Flow\Validation\ValidatorResolver;
 use Neos\Flow\Annotations as Flow;
@@ -39,8 +40,13 @@ class SubscriptionService
         $formId = $registrationForm->getProperty('formId');
         $useDOI = $registrationForm->getProperty('useDOI');
 
-        //Add user to list
-        $this->apiService->addReceiver($receiverData, $groupId, !$useDOI);
+        //Try to get existing receiver. Only if the NotFoundException is thrown, we should create a new one.
+        try {
+            $receiver = $this->apiService->getReceiverFromGroup($receiverData['email'], $receiverData['groupId']);
+        } catch (NotFoundException $exception) {
+            //Add user to list
+            $this->apiService->addReceiver($receiverData, $groupId, !$useDOI);
+        }
 
         //Send confirmation mail (if Doi activated)
         if ($useDOI === true) {
