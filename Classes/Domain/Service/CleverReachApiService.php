@@ -65,18 +65,9 @@ class CleverReachApiService
 
     public function initializeObject()
     {
-        $this->cache = $this->cacheManager->getCache('KaufmannDigital_CleverReach_TokenCache');
-
-        if ($this->cache->has('jwt') === true) {
-            $this->apiToken = $this->cache->get('jwt');
-        } else {
-            $this->apiToken = $this->authenticate(
-                $this->settings['credentials']
-            );
-
-            //Cache the token for 30 days
-            $this->cache->set('jwt', $this->apiToken, [], 2592000);
-        }
+        $this->apiToken = $this->authenticate(
+            $this->settings['credentials']
+        );
     }
 
 
@@ -289,18 +280,34 @@ class CleverReachApiService
     private function authenticate($client)
     {
         try {
-            if (array_key_exists('clientSecret', $client) && !empty($client['clientSecret'])) {
-                $uri = new Uri($this->settings['oauthTokenEndpoint']);
+            if (!isset($client['clientId']) || empty($client['clientId']) || !isset($client['clientSecret']) || empty($client['clientSecret'])) {
+                throw new CleverReachException('clientId and clientSecret have to be defined!', 1635148090);
+            }
 
-                return $this->callUri('POST', $uri, [
+            $cacheIdentifier = 'JWT_' . sha1(json_encode($client));
+            if ($this->cache->has($cacheIdentifier) === true) {
+                return $this->cache->get($cacheIdentifier);
+            } else {
+                $uri = new Uri($this->settings['oauthTokenEndpoint']);
+                $result = $this->callUri('POST', $uri, [
                     'grant_type' => 'client_credentials',
                     'client_id' => $client['clientId'],
                     'client_secret' => $client['clientSecret'],
-                ])['access_token'];
+                ]);
+
+                if (!isset($result['access_token']) || empty($result['access_token'])) {
+                    throw new CleverReachException('oAuth failed', 1635148117);
+                }
+
+                //Cache the token for 30 days
+                $this->cache->set($cacheIdentifier, $result['access_token'], [], $result['expires_in']);
+                return $result['access_token'];
             }
         } catch (CleverReachException $e) {
-            throw new AuthenticationFailedException('CleverReach authentication failed. Credentials correct?',
-                1485944436);
+            throw new AuthenticationFailedException(
+                'CleverReach authentication failed. Credentials correct?',
+                1485944436
+            );
         }
     }
 

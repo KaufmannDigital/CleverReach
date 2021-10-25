@@ -1,2 +1,5 @@
 KaufmannDigital_CleverReach_TokenCache:
   frontend: Neos\Cache\Frontend\StringFrontend
+  backend: Neos\Cache\Backend\SimpleFileBackend
+  backendOptions:
+    defaultLifetime: 1209600

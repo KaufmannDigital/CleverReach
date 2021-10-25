@@ -1,0 +1,9 @@
+KaufmannDigital\CleverReach\Domain\Service\CleverReachApiService:
+  properties:
+    cache:
+      object:
+        factoryObjectName: Neos\Flow\Cache\CacheManager
+        factoryMethodName: getCache
+        arguments:
+          1:
+            value: KaufmannDigital_CleverReach_TokenCache
