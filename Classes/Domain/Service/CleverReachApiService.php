@@ -355,7 +355,7 @@ class CleverReachApiService
                 'Content-Type' => 'application/json; charset=utf-8',
                 'Authorization' => 'Bearer ' . $this->apiToken
             ],
-            $method !== 'GET' ? \GuzzleHttp\json_encode($arguments) : null
+            $method !== 'GET' && $arguments !== null ? \GuzzleHttp\json_encode($arguments) : null
         );
 
         //Fire request and get response-body
