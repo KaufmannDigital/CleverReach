@@ -64,11 +64,11 @@ These fields are also supported by this package. To submit data to this fields, 
    ```
 4. Add your custom fields as input field to your customized template:
     ```html
-    <f:form.input name="receiverData[attributes][custom-field]" />
+    <f:form.input name="receiverData[attributes]" />
     ```
     or as hidden field: 
     ```html
-    <f:form.hidden name="receiverData[attributes][custom-field]" value="My Value"/>
+    <f:form.hidden name="receiverData[attributes]" value="My Value"/>
     ```
     
     For **global additional fields** just replace `attributes` with `global_attributes`
