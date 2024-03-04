@@ -52,14 +52,23 @@ CleverReach® supports additional fields to store more information about the sub
 These fields are also supported by this package. To submit data to this fields, you have to do a bit of customizing:
 
 1. Create the additional fields at CleverReach®. [Described here](https://support.cleverreach.de/hc/de/articles/202372851-Nutzung-eigener-Datenfelder-in-Empf%C3%A4ngerlisten)
-2. Override the template of NodeType [Explained in Documentation](http://flowframework.readthedocs.io/en/stable/TheDefinitiveGuide/PartIII/ModelViewController.html#configuring-views-through-views-yaml)
-3. Add your custom fields as input field to your customized template:
+2. Override the template of NodeType [Explained in Documentation](http://flowframework.readthedocs.io/en/stable/TheDefinitiveGuide/PartIII/ModelViewController.html#configuring-views-through-views-yaml) like this
+  ```yaml
+-
+  requestFilter: 'isPackage("KaufmannDigital.CleverReach")'
+  options:
+    templateRootPaths:
+      'KaufmannDigital.CleverReach': 'resource://HolyPoly.Website/Private/Templates/'
+
+
+   ```
+4. Add your custom fields as input field to your customized template:
     ```html
-    <f:form.input name="receiverData[attributes]" />
+    <f:form.input name="receiverData[attributes][custom-field]" />
     ```
     or as hidden field: 
     ```html
-    <f:form.hidden name="receiverData[attributes]" value="My Value"/>
+    <f:form.hidden name="receiverData[attributes][custom-field]" value="My Value"/>
     ```
     
     For **global additional fields** just replace `attributes` with `global_attributes`
