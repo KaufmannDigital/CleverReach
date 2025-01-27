@@ -270,6 +270,40 @@ class CleverReachApiService
         );
     }
 
+
+    /**
+     * @param array $data
+     * [
+     *   "name" => "INTERNAL NAME",
+     *   "subject" => "",
+     *   "sender_name" => "",
+     *   "sender_email" => "",
+     *   "content" => [
+     *     "type" => "html",
+     *     "html" => ""
+     *   ],
+     *   "receivers" => [
+     *     "groups" => [
+     *       123456
+     *     ]
+     *   ],
+     *   "settings" => [
+     *     "editor" => "advanced"
+     *   ],
+     *   "tags" => [
+     *     "setup_v2"
+     *   ]
+     * ]
+     * @return void
+     * @throws ApiRequestException
+     * @throws GuzzleException
+     * @throws NotFoundException
+     */
+    public function createMailing(array $data): void
+    {
+        $this->fireRequest('POST', 'mailings.json', $data);
+    }
+
     /**
      * Authenticate against the API to get a valid JWT
      *
@@ -320,7 +354,7 @@ class CleverReachApiService
      * @param array|null $arguments arguments for the request
      * @return mixed decoded response
      * @throws ApiRequestException
-     * @throws NotFoundException
+     * @throws NotFoundException|GuzzleException
      */
     private function fireRequest($method, $resource, array $arguments = null)
     {
