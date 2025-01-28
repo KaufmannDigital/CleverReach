@@ -294,14 +294,18 @@ class CleverReachApiService
      *     "setup_v2"
      *   ]
      * ]
-     * @return void
      * @throws ApiRequestException
      * @throws GuzzleException
      * @throws NotFoundException
      */
-    public function createMailing(array $data): void
+    public function createMailing(array $data)
     {
-        $this->fireRequest('POST', 'mailings.json', $data);
+        return $this->fireRequest('POST', 'mailings.json', $data);
+    }
+
+    public function updateMailing(string $id, array $data)
+    {
+        return $this->fireRequest('PUT', 'mailings.json/' . $id, $data);
     }
 
     /**
