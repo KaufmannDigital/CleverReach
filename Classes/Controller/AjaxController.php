@@ -3,12 +3,15 @@
 namespace KaufmannDigital\CleverReach\Controller;
 
 
+use GuzzleHttp\Psr7\Response;
 use KaufmannDigital\CleverReach\Exception\CleverReachException;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\Error\Messages\Error;
 use Neos\Flow\Annotations as Flow;
 use KaufmannDigital\CleverReach\Domain\Service\SubscriptionService;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Flow\I18n\Detector;
+use Neos\Flow\I18n\Exception\IndexOutOfBoundsException;
+use Neos\Flow\I18n\Exception\InvalidFormatPlaceholderException;
 use Neos\Flow\I18n\Locale;
 use Neos\Flow\I18n\Translator;
 use Neos\Flow\Mvc\Controller\RestController;
@@ -31,24 +34,14 @@ class AjaxController extends RestController
      */
     protected $locale;
 
-    /**
-     * @Flow\Inject
-     * @var Translator
-     */
-    protected $translator;
+    #[Flow\Inject]
+    protected Translator $translator;
 
-    /**
-     * @Flow\Inject
-     * @var Detector
-     */
-    protected $languageDetector;
+    #[Flow\Inject]
+    protected Detector $languageDetector;
 
-    /**
-     * @Flow\Inject
-     * @var SubscriptionService
-     */
-    protected $subscriptionService;
-
+    #[Flow\Inject]
+    protected SubscriptionService $subscriptionService;
 
     public function initializeAction()
     {
@@ -60,9 +53,9 @@ class AjaxController extends RestController
      * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverData")
      * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverNotExistsInGroup")
      * @param array $receiverData
-     * @param NodeInterface $registrationForm
+     * @param Node $registrationForm
      */
-    public function subscribeAction(array $receiverData, NodeInterface $registrationForm)
+    public function subscribeAction(array $receiverData, Node $registrationForm)
     {
         try {
             $this->subscriptionService->subscribe($receiverData, $registrationForm, $this->request->getHttpRequest());
@@ -73,24 +66,32 @@ class AjaxController extends RestController
                     ? $this->translateById('success-message-doi', 'RegistrationForm')
                     : $this->translateById('success-message', 'RegistrationForm')
             );
-            $this->response->setStatusCode(201);
+            $statusCode = 201;
 
         } catch (CleverReachException $e) {
             $this->view->assign('success', false);
             $this->view->assign('message', $e->getMessage());
-            $this->response->setStatusCode(400);
+            $statusCode = 400;
         }
 
         $this->view->setVariablesToRender(['success', 'message']);
+
+        $response = $this->view->render();
+        if (!$response instanceof Response) {
+            $response = new Response(status: $statusCode, body: $response);
+        } else {
+            $response->withStatus($statusCode);
+        }
+        return $response;
     }
 
     /**
      * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverData")
      * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverExistsInGroup")
      * @param array $receiverData
-     * @param NodeInterface $registrationForm
+     * @param Node $registrationForm
      */
-    public function unsubscribeAction(array $receiverData, NodeInterface $registrationForm)
+    public function unsubscribeAction(array $receiverData, Node $registrationForm)
     {
         try {
             $this->subscriptionService->unsubscribe($receiverData, $registrationForm, $this->request->getHttpRequest());
@@ -101,15 +102,21 @@ class AjaxController extends RestController
                     ? $this->translateById('success-message-unsubscribe-double-opt-out', 'RegistrationForm')
                     : $this->translateById('success-message-unsubscribe', 'RegistrationForm')
             );
-            $this->response->setStatusCode(201);
+            $statusCode = 201;
 
         } catch (CleverReachException $e) {
             $this->view->assign('success', false);
             $this->view->assign('message', $e->getMessage());
-            $this->response->setStatusCode(400);
+            $statusCode = 400;
         }
-
         $this->view->setVariablesToRender(['success', 'message']);
+        $response = $this->view->render();
+        if (!$response instanceof Response) {
+            $response = new Response(status: $statusCode, body: $response);
+        } else {
+            $response->withStatus($statusCode);
+        }
+        return $response;
     }
 
 
@@ -118,10 +125,6 @@ class AjaxController extends RestController
      */
     public function errorAction()
     {
-        $this->response->setStatusCode(400);
-        $this->view->setVariablesToRender(['success', 'message']);
-        $this->view->assign('success', false);
-
         $flattenedErrors = $this->arguments->getValidationResults()->getFlattenedErrors();
 
         /** @var Error[] $argumentErrors */
@@ -132,7 +135,16 @@ class AjaxController extends RestController
                     $argumentErrors[0]->getCode(), 'ValidationErrors')
             );
         }
+        $this->view->setVariablesToRender(['success', 'message']);
+        $this->view->assign('success', false);
 
+        $response = $this->view->render();
+        if (!$response instanceof Response) {
+            $response = new Response(status: 400, body: $response);
+        } else {
+            $response->withStatus(400);
+        }
+        return $response;
     }
 
 
@@ -142,8 +154,10 @@ class AjaxController extends RestController
      * @param string $id
      * @param string $sourceName
      * @return string
+     * @throws IndexOutOfBoundsException
+     * @throws InvalidFormatPlaceholderException
      */
-    protected function translateById(string $id, string $sourceName)
+    protected function translateById(string $id, string $sourceName): string
     {
         return $this->translator->translateById(
             $id,

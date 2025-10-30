@@ -3,10 +3,12 @@
 namespace KaufmannDigital\CleverReach\Domain\Service;
 
 use GuzzleHttp\Psr7\ServerRequest;
+use KaufmannDigital\CleverReach\Exception\ApiRequestException;
 use KaufmannDigital\CleverReach\Exception\NotFoundException;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\Flow\Validation\ValidatorResolver;
 use Neos\Flow\Annotations as Flow;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class SubscriptionService
@@ -15,26 +17,21 @@ use Neos\Flow\Annotations as Flow;
  */
 class SubscriptionService
 {
+    #[Flow\Inject]
+    protected CleverReachApiService $apiService;
 
-    /**
-     * @Flow\Inject
-     * @var CleverReachApiService
-     */
-    protected $apiService;
-
-    /**
-     * @Flow\Inject
-     * @var ValidatorResolver
-     */
-    protected $validatorResolver;
+    #[Flow\Inject]
+    protected ValidatorResolver $validatorResolver;
 
 
     /**
      * @param array $receiverData
-     * @param NodeInterface $registrationForm
+     * @param Node $registrationForm
      * @param ServerRequest|null $httpRequest
+     * @throws NotFoundException
+     * @throws ApiRequestException
      */
-    public function subscribe(array $receiverData, NodeInterface $registrationForm, ServerRequest $httpRequest = null)
+    public function subscribe(array $receiverData, Node $registrationForm, ServerRequestInterface $httpRequest = null): void
     {
         $groupId = $registrationForm->getProperty('groupId');
         $formId = $registrationForm->getProperty('formId');
@@ -62,10 +59,12 @@ class SubscriptionService
 
     /**
      * @param array $receiverData
-     * @param NodeInterface $registrationForm
+     * @param Node $registrationForm
      * @param ServerRequest|null $httpRequest
+     * @throws ApiRequestException
+     * @throws NotFoundException
      */
-    public function unsubscribe(array $receiverData, NodeInterface $registrationForm, ServerRequest $httpRequest = null)
+    public function unsubscribe(array $receiverData, Node $registrationForm, ServerRequestInterface $httpRequest = null): void
     {
         $groupId = $registrationForm->getProperty('groupId');
         $formId = $registrationForm->getProperty('formId');
@@ -84,5 +83,4 @@ class SubscriptionService
             $this->apiService->removeReceiver($receiverData['email'], $groupId);
         }
     }
-
 }

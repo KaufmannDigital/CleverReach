@@ -3,10 +3,12 @@
 namespace KaufmannDigital\CleverReach\Controller;
 
 
+use GuzzleHttp\Psr7\Response;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\Flow\Annotations as Flow;
 use KaufmannDigital\CleverReach\Domain\Service\SubscriptionService;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Flow\Mvc\Controller\ActionController;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class SubscriptionController
@@ -16,23 +18,19 @@ use Neos\Flow\Mvc\Controller\ActionController;
 class SubscriptionController extends ActionController
 {
 
-    /**
-     * @Flow\Inject
-     * @var SubscriptionService
-     */
-    protected $subscriptionService;
+    #[Flow\Inject]
+    protected SubscriptionService $subscriptionService;
 
 
     /**
      * Display the registration form
-     * @return void
      */
     public function indexAction()
     {
         $node = $this->request->getInternalArgument('__node');
         $this->view->assign('node', $node);
 
-        if($node->getProperty('formAction') != '') {
+        if ($node->getProperty('formAction') != '') {
             $this->view->assign('formAction', $node->getProperty('formAction'));
         } else {
             $this->view->assign('formAction', 'subscribe');
@@ -49,7 +47,7 @@ class SubscriptionController extends ActionController
      */
     public function subscribeAction(array $receiverData)
     {
-        /** @var NodeInterface $registrationForm */
+        /** @var Node $registrationForm */
         $registrationForm = $this->request->getInternalArgument('__node');
 
         $this->subscriptionService->subscribe($receiverData, $registrationForm, $this->request->getHttpRequest());
@@ -64,12 +62,11 @@ class SubscriptionController extends ActionController
      */
     public function unsubscribeAction(array $receiverData)
     {
-        /** @var NodeInterface $registrationForm */
+        /** @var Node $registrationForm */
         $registrationForm = $this->request->getInternalArgument('__node');
 
         $this->subscriptionService->unsubscribe($receiverData, $registrationForm, $this->request->getHttpRequest());
 
         $this->view->assign('usedDOI', $registrationForm->getProperty('useDOI'));
     }
-
 }

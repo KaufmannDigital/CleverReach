@@ -1,6 +1,9 @@
 <?php
 namespace KaufmannDigital\CleverReach\DataSource;
 
+use KaufmannDigital\CleverReach\Exception\ApiRequestException;
+use KaufmannDigital\CleverReach\Exception\NotFoundException;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\Flow\Annotations as Flow;
 use KaufmannDigital\CleverReach\Domain\Service\CleverReachApiService;
 use Neos\Neos\Service\DataSource\AbstractDataSource;
@@ -18,15 +21,15 @@ class CleverReachGroupsDataSource extends AbstractDataSource
      */
     static protected $identifier = 'kaufmanndigital-cleverreach-groups';
 
+    #[Flow\Inject]
+    protected CleverReachApiService $apiService;
+
 
     /**
-     * @Flow\Inject
-     * @var CleverReachApiService
+     * @throws ApiRequestException
+     * @throws NotFoundException
      */
-    protected $apiService;
-
-
-    public function getData(NodeInterface $node = null, array $arguments = [])
+    public function getData(Node $node = null, array $arguments = []): array
     {
         $groups = $this->apiService->getGroups();
 

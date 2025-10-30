@@ -1,6 +1,7 @@
 <?php
 namespace KaufmannDigital\CleverReach\DataSource;
 
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\Flow\Annotations as Flow;
 use KaufmannDigital\CleverReach\Domain\Service\CleverReachApiService;
 use Neos\Neos\Service\DataSource\AbstractDataSource;
@@ -19,14 +20,11 @@ class CleverReachFormsDataSource extends AbstractDataSource
     static protected $identifier = 'kaufmanndigital-cleverreach-forms';
 
 
-    /**
-     * @Flow\Inject
-     * @var CleverReachApiService
-     */
-    protected $apiService;
+    #[Flow\Inject]
+    protected CleverReachApiService $apiService;
 
 
-    public function getData(NodeInterface $node = null, array $arguments = [])
+    public function getData(Node $node = null, array $arguments = []): array
     {
         $forms = $this->apiService->getForms();
         $data = [];
