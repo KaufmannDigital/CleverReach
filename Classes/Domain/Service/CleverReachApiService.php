@@ -11,9 +11,12 @@ use KaufmannDigital\CleverReach\Exception\AuthenticationFailedException;
 use KaufmannDigital\CleverReach\Exception\CleverReachException;
 use KaufmannDigital\CleverReach\Exception\NotFoundException;
 use Neos\Cache\Frontend\StringFrontend;
+use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\Eel\FlowQuery\FlowQuery;
 use Neos\Flow\Cache\CacheManager;
 use Neos\Flow\Http\Client\CurlEngine;
 use Neos\Http\Factories\ServerRequestFactory;
+use Neos\Neos\Domain\Service\ContentContextFactory;
 use GuzzleHttp\Psr7\Uri;
 use Neos\Http\Factories\StreamFactory;
 
@@ -58,6 +61,12 @@ class CleverReachApiService
     protected $cacheManager;
 
     /**
+     * @Flow\Inject
+     * @var ContentContextFactory
+     */
+    protected $contextFactory;
+
+    /**
      * @var string
      */
     protected $apiToken;
@@ -65,9 +74,23 @@ class CleverReachApiService
 
     public function initializeObject()
     {
-        $this->apiToken = $this->authenticate(
-            $this->settings['credentials']
-        );
+        $credentials = $this->settings['credentials'];
+
+        $q = new FlowQuery([$this->contextFactory->create()->getCurrentSiteNode()]);
+        $configurationNode = $q->find('[instanceof KaufmannDigital.CleverReach:Mixin.NodeWithCleverReachCredentials]')->get(0);
+
+        if (
+            $configurationNode instanceof NodeInterface
+            && !empty($configurationNode->getProperty('cleverReachClientId'))
+            && !empty($configurationNode->getProperty('cleverReachClientSecret'))
+        ) {
+            $credentials = [
+                'clientId' => $configurationNode->getProperty('cleverReachClientId'),
+                'clientSecret' => $configurationNode->getProperty('cleverReachClientSecret'),
+            ];
+        }
+
+        $this->apiToken = $this->authenticate($credentials);
     }
 
 
