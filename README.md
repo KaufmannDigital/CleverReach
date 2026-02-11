@@ -22,7 +22,9 @@ KaufmannDigital:
       clientId: '<client-id>'
       clientSecret: '<client-secret>'
 ```
-<br>
+
+**Alternative:** Instead of configuring credentials in `Settings.yaml`, you can add the `KaufmannDigital.CleverReach:Mixin.NodeWithCleverReachCredentials` mixin to any NodeType (e.g. your site node). This adds **Client ID** and **Client Secret** fields to the Neos inspector, allowing editors to manage credentials directly in the backend. Node-based credentials take precedence over `Settings.yaml`.
+
 <br>
 
 **Optional:** If you want to use Ajax submitting your forms, please load the shipped JavaScript (jQuery needed) using `<script src="{f:uri.resource(path: 'JavaScript/Main.js', package: 'KaufmannDigital.CleverReach')}"></script>` inside your template or create your own Ajax-action.  
