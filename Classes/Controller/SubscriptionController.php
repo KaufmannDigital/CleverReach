@@ -5,7 +5,7 @@ namespace KaufmannDigital\CleverReach\Controller;
 
 use Neos\Flow\Annotations as Flow;
 use KaufmannDigital\CleverReach\Domain\Service\SubscriptionService;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\Flow\Mvc\Controller\ActionController;
 
 /**
@@ -16,11 +16,8 @@ use Neos\Flow\Mvc\Controller\ActionController;
 class SubscriptionController extends ActionController
 {
 
-    /**
-     * @Flow\Inject
-     * @var SubscriptionService
-     */
-    protected $subscriptionService;
+    #[Flow\Inject]
+    protected SubscriptionService $subscriptionService;
 
 
     /**
@@ -49,7 +46,7 @@ class SubscriptionController extends ActionController
      */
     public function subscribeAction(array $receiverData)
     {
-        /** @var NodeInterface $registrationForm */
+        /** @var Node $registrationForm */
         $registrationForm = $this->request->getInternalArgument('__node');
 
         $this->subscriptionService->subscribe($receiverData, $registrationForm, $this->request->getHttpRequest());
@@ -64,7 +61,7 @@ class SubscriptionController extends ActionController
      */
     public function unsubscribeAction(array $receiverData)
     {
-        /** @var NodeInterface $registrationForm */
+        /** @var Node $registrationForm */
         $registrationForm = $this->request->getInternalArgument('__node');
 
         $this->subscriptionService->unsubscribe($receiverData, $registrationForm, $this->request->getHttpRequest());

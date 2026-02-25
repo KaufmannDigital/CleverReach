@@ -3,7 +3,6 @@
 namespace KaufmannDigital\CleverReach\Validation\Validator;
 
 
-use KaufmannDigital\CleverReach\Domain\Model\ReceiverData;
 use KaufmannDigital\CleverReach\Domain\Service\CleverReachApiService;
 use KaufmannDigital\CleverReach\Exception\NotFoundException;
 use Neos\Flow\Annotations as Flow;
@@ -15,11 +14,8 @@ use Neos\Flow\Validation\Validator\AbstractValidator;
  */
 class ReceiverNotExistsInGroupValidator extends AbstractValidator
 {
-    /**
-     * @Flow\Inject
-     * @var CleverReachApiService
-     */
-    protected $apiService;
+    #[Flow\Inject]
+    protected CleverReachApiService $apiService;
 
     /**
      * @param array $value
@@ -27,7 +23,7 @@ class ReceiverNotExistsInGroupValidator extends AbstractValidator
     public function isValid($value)
     {
         try {
-            $receiver = $this->apiService->getReceiverFromGroup($value['email'], $value['groupId']);
+            $receiver = $this->apiService->getReceiverFromGroup($value['email'], (int)$value['groupId']);
             if (isset($receiver['active']) && $receiver['active'] === true) {
                 $this->addError('This email address is already in our list', 1504541582);
             }

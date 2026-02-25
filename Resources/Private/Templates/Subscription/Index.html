@@ -49,7 +49,7 @@
 
         <input type="hidden" name="receiverData[source]" value="{sourceUrl}"/>
         <input type="hidden" name="receiverData[groupId]" value="{node.properties.groupId}"/>
-        <input type="hidden" name="registrationForm" value="{node.contextPath}"/>
+        <input type="hidden" name="registrationFormAggregateId" value="{node.aggregateId.value}"/>
 
         <input type="submit" value="{f:translate(id: 'button.submit.{formAction}', source: 'RegistrationForm')}"/>
     </form>

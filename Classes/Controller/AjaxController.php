@@ -7,7 +7,11 @@ use KaufmannDigital\CleverReach\Exception\CleverReachException;
 use Neos\Error\Messages\Error;
 use Neos\Flow\Annotations as Flow;
 use KaufmannDigital\CleverReach\Domain\Service\SubscriptionService;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
+use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
+use Neos\ContentRepository\Core\SharedModel\Node\NodeAggregateId;
+use Neos\ContentRepository\Core\SharedModel\Workspace\WorkspaceName;
+use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\I18n\Detector;
 use Neos\Flow\I18n\Locale;
 use Neos\Flow\I18n\Translator;
@@ -31,39 +35,34 @@ class AjaxController extends RestController
      */
     protected $locale;
 
-    /**
-     * @Flow\Inject
-     * @var Translator
-     */
-    protected $translator;
+    #[Flow\Inject]
+    protected Translator $translator;
 
-    /**
-     * @Flow\Inject
-     * @var Detector
-     */
-    protected $languageDetector;
+    #[Flow\Inject]
+    protected Detector $languageDetector;
 
-    /**
-     * @Flow\Inject
-     * @var SubscriptionService
-     */
-    protected $subscriptionService;
+    #[Flow\Inject]
+    protected SubscriptionService $subscriptionService;
+
+    #[Flow\Inject]
+    protected ContentRepositoryRegistry $contentRepositoryRegistry;
 
 
     public function initializeAction()
     {
-        $acceptLanguage = $this->request->getHttpRequest()->getHeader('Accept-Language');
-        $this->locale = $this->languageDetector->detectLocaleFromHttpHeader($acceptLanguage[0]);
+        $acceptLanguage = $this->request->getHttpRequest()->getHeaderLine('Accept-Language');
+        $this->locale = $this->languageDetector->detectLocaleFromHttpHeader($acceptLanguage);
     }
 
     /**
      * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverData")
      * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverNotExistsInGroup")
      * @param array $receiverData
-     * @param NodeInterface $registrationForm
+     * @param string $registrationFormAggregateId
      */
-    public function subscribeAction(array $receiverData, NodeInterface $registrationForm)
+    public function subscribeAction(array $receiverData, string $registrationFormAggregateId)
     {
+        $registrationForm = $this->resolveRegistrationFormNode($registrationFormAggregateId);
         try {
             $this->subscriptionService->subscribe($receiverData, $registrationForm, $this->request->getHttpRequest());
 
@@ -88,10 +87,11 @@ class AjaxController extends RestController
      * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverData")
      * @Flow\Validate(argumentName="receiverData", type="KaufmannDigital.CleverReach:ReceiverExistsInGroup")
      * @param array $receiverData
-     * @param NodeInterface $registrationForm
+     * @param string $registrationFormAggregateId
      */
-    public function unsubscribeAction(array $receiverData, NodeInterface $registrationForm)
+    public function unsubscribeAction(array $receiverData, string $registrationFormAggregateId)
     {
+        $registrationForm = $this->resolveRegistrationFormNode($registrationFormAggregateId);
         try {
             $this->subscriptionService->unsubscribe($receiverData, $registrationForm, $this->request->getHttpRequest());
 
@@ -153,6 +153,16 @@ class AjaxController extends RestController
             $sourceName,
             'KaufmannDigital.CleverReach'
         );
+    }
+
+    private function resolveRegistrationFormNode(string $aggregateId): Node
+    {
+        $cr = $this->contentRepositoryRegistry->get(ContentRepositoryId::fromString('default'));
+        $contentGraph = $cr->getContentGraph(WorkspaceName::forLive());
+        $aggregate = $contentGraph->findNodeAggregateById(NodeAggregateId::fromString($aggregateId));
+        $dsp = array_values($aggregate->coveredDimensionSpacePoints->points)[0] ?? null;
+        return $cr->getContentSubgraph(WorkspaceName::forLive(), $dsp)
+            ->findNodeById($aggregate->nodeAggregateId);
     }
 
 }
