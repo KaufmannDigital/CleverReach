@@ -11,60 +11,31 @@ use KaufmannDigital\CleverReach\Exception\AuthenticationFailedException;
 use KaufmannDigital\CleverReach\Exception\CleverReachException;
 use KaufmannDigital\CleverReach\Exception\NotFoundException;
 use Neos\Cache\Frontend\StringFrontend;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
+use Neos\ContentRepository\Core\NodeType\NodeTypeName;
+use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
+use Neos\ContentRepository\Core\SharedModel\Workspace\WorkspaceName;
+use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Eel\FlowQuery\FlowQuery;
 use Neos\Flow\Cache\CacheManager;
-use Neos\Flow\Http\Client\CurlEngine;
-use Neos\Http\Factories\ServerRequestFactory;
-use Neos\Neos\Domain\Service\ContentContextFactory;
 use GuzzleHttp\Psr7\Uri;
-use Neos\Http\Factories\StreamFactory;
 
 class CleverReachApiService
 {
 
-    /**
-     * @Flow\InjectConfiguration()
-     * @var array
-     */
-    protected $settings;
-
-    /**
-     * @Flow\Inject
-     * @var CurlEngine
-     */
-    protected $requestEngine;
-
-
-    /**
-     * @Flow\Inject
-     * @var ServerRequestFactory
-     */
-    protected $serverRequestFactory;
-
-
-    /**
-     * @Flow\Inject
-     * @var StreamFactory
-     */
-    protected $streamFactory;
+    #[Flow\InjectConfiguration]
+    protected array $settings;
 
     /**
      * @var StringFrontend
      */
     protected $cache;
 
-    /**
-     * @Flow\Inject
-     * @var CacheManager
-     */
-    protected $cacheManager;
+    #[Flow\Inject]
+    protected CacheManager $cacheManager;
 
-    /**
-     * @Flow\Inject
-     * @var ContentContextFactory
-     */
-    protected $contextFactory;
+    #[Flow\Inject]
+    protected ContentRepositoryRegistry $contentRepositoryRegistry;
 
     /**
      * @var string
@@ -72,24 +43,38 @@ class CleverReachApiService
     protected $apiToken;
 
 
-    public function initializeObject()
+    public function initializeObject(): void
     {
         $credentials = $this->settings['credentials'];
-
-        $q = new FlowQuery([$this->contextFactory->create()->getCurrentSiteNode()]);
-        $configurationNode = $q->find('[instanceof KaufmannDigital.CleverReach:Mixin.NodeWithCleverReachCredentials]')->get(0);
-
-        if (
-            $configurationNode instanceof NodeInterface
-            && !empty($configurationNode->getProperty('cleverReachClientId'))
-            && !empty($configurationNode->getProperty('cleverReachClientSecret'))
-        ) {
-            $credentials = [
-                'clientId' => $configurationNode->getProperty('cleverReachClientId'),
-                'clientSecret' => $configurationNode->getProperty('cleverReachClientSecret'),
-            ];
+        try {
+            $cr = $this->contentRepositoryRegistry->get(ContentRepositoryId::fromString('default'));
+            $contentGraph = $cr->getContentGraph(WorkspaceName::forLive());
+            $sitesAggregate = $contentGraph->findRootNodeAggregateByType(
+                NodeTypeName::fromString('Neos.Neos:Sites')
+            );
+            $dsp = array_values($sitesAggregate->coveredDimensionSpacePoints->points)[0] ?? null;
+            if ($dsp !== null) {
+                $subgraph = $cr->getContentSubgraph(WorkspaceName::forLive(), $dsp);
+                $sitesNode = $subgraph->findNodeById($sitesAggregate->nodeAggregateId);
+                if ($sitesNode !== null) {
+                    $configNode = (new FlowQuery([$sitesNode]))
+                        ->find('[instanceof KaufmannDigital.CleverReach:Mixin.NodeWithCleverReachCredentials]')
+                        ->get(0);
+                    if (
+                        $configNode instanceof Node
+                        && !empty($configNode->getProperty('cleverReachClientId'))
+                        && !empty($configNode->getProperty('cleverReachClientSecret'))
+                    ) {
+                        $credentials = [
+                            'clientId' => $configNode->getProperty('cleverReachClientId'),
+                            'clientSecret' => $configNode->getProperty('cleverReachClientSecret'),
+                        ];
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // Fall back to Settings.yaml credentials
         }
-
         $this->apiToken = $this->authenticate($credentials);
     }
 
@@ -406,7 +391,7 @@ class CleverReachApiService
     {
         //Build uri and set GET-Arguments
         if ($method === 'GET' && $arguments !== null) {
-            $uri->setQuery(http_build_query($arguments));
+            $uri = $uri->withQuery(http_build_query($arguments));
         }
 
         $request = new Request(
@@ -416,7 +401,7 @@ class CleverReachApiService
                 'Content-Type' => 'application/json; charset=utf-8',
                 'Authorization' => 'Bearer ' . $this->apiToken
             ],
-            $method !== 'GET' && $arguments !== null ? \GuzzleHttp\json_encode($arguments) : null
+            $method !== 'GET' && $arguments !== null ? json_encode($arguments) : null
         );
 
         //Fire request and get response-body

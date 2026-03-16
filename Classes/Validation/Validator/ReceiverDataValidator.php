@@ -3,7 +3,6 @@
 namespace KaufmannDigital\CleverReach\Validation\Validator;
 
 
-use KaufmannDigital\CleverReach\Domain\Model\ReceiverData;
 use KaufmannDigital\CleverReach\Domain\Service\CleverReachApiService;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Validation\Validator\AbstractValidator;
@@ -15,11 +14,8 @@ use Neos\Flow\Validation\Validator\AbstractValidator;
 class ReceiverDataValidator extends AbstractValidator
 {
 
-    /**
-     * @Flow\Inject
-     * @var  CleverReachApiService
-     */
-    protected $apiService;
+    #[Flow\Inject]
+    protected CleverReachApiService $apiService;
 
 
     /**
