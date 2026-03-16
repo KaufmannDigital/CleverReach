@@ -3,12 +3,27 @@ KaufmannDigital.CleverReach
 
 An easy-to-use package, that integrates the email marketing solution [CleverReach](https://www.cleverreach.com)® into your [Neos](https://www.neos.io) site to directly add new subscribers to your newsletter lists via registration form.
 
+Version Compatibility
+---------------------
+
+| Package version | Neos version |
+|-----------------|--------------|
+| **4.x**         | Neos 9.x     |
+| **3.x**         | Neos 7.x / 8.x |
+
 Installation
 ------------
 
 The easiest way to install is running this command:
+
+**For Neos 9.x:**
 ```bash
-composer require kaufmanndigital/cleverreach
+composer require kaufmanndigital/cleverreach:^4.0
+```
+
+**For Neos 7.x / 8.x:**
+```bash
+composer require kaufmanndigital/cleverreach:^3.0
 ```
 
 **After successful installation, configure your CleverReach® credentials with oAuth-credentials:**
