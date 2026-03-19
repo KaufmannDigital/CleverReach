@@ -67,14 +67,19 @@ class CleverReachApiService
     protected $contextFactory;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $apiToken;
+    protected $apiToken = null;
+
+    /**
+     * @var array
+     */
+    protected $credentials = [];
 
 
     public function initializeObject()
     {
-        $credentials = $this->settings['credentials'];
+        $this->credentials = $this->settings['credentials'];
 
         $q = new FlowQuery([$this->contextFactory->create()->getCurrentSiteNode()]);
         $configurationNode = $q->find('[instanceof KaufmannDigital.CleverReach:Mixin.NodeWithCleverReachCredentials]')->get(0);
@@ -84,13 +89,23 @@ class CleverReachApiService
             && !empty($configurationNode->getProperty('cleverReachClientId'))
             && !empty($configurationNode->getProperty('cleverReachClientSecret'))
         ) {
-            $credentials = [
+            $this->credentials = [
                 'clientId' => $configurationNode->getProperty('cleverReachClientId'),
                 'clientSecret' => $configurationNode->getProperty('cleverReachClientSecret'),
             ];
         }
+    }
 
-        $this->apiToken = $this->authenticate($credentials);
+    /**
+     * @return string
+     * @throws AuthenticationFailedException
+     */
+    private function getApiToken(): string
+    {
+        if ($this->apiToken === null) {
+            $this->apiToken = $this->authenticate($this->credentials);
+        }
+        return $this->apiToken;
     }
 
 
@@ -354,7 +369,7 @@ class CleverReachApiService
                     'grant_type' => 'client_credentials',
                     'client_id' => $client['clientId'],
                     'client_secret' => $client['clientSecret'],
-                ]);
+                ], false);
 
                 if (!isset($result['access_token']) || empty($result['access_token'])) {
                     throw new CleverReachException('oAuth failed', 1635148117);
@@ -398,24 +413,27 @@ class CleverReachApiService
      * @param string $method HTTP method (GET/POST/PUT...)
      * @param Uri $uri URI resource
      * @param array|null $arguments arguments for the request
+     * @param boolean $authenticated
      * @return mixed decoded response
      * @throws ApiRequestException
      * @throws NotFoundException|GuzzleException
      */
-    private function callUri($method, Uri $uri, array $arguments = null)
+    private function callUri($method, Uri $uri, array $arguments = null, bool $authenticated = true)
     {
         //Build uri and set GET-Arguments
         if ($method === 'GET' && $arguments !== null) {
             $uri->setQuery(http_build_query($arguments));
         }
 
+        $headers = ['Content-Type' => 'application/json; charset=utf-8'];
+        if ($authenticated  === true) {
+            $headers['Authorization'] = 'Bearer ' . $this->getApiToken();
+        }
+
         $request = new Request(
             $method,
             $uri,
-            [
-                'Content-Type' => 'application/json; charset=utf-8',
-                'Authorization' => 'Bearer ' . $this->apiToken
-            ],
+            $headers,
             $method !== 'GET' && $arguments !== null ? \GuzzleHttp\json_encode($arguments) : null
         );
 
