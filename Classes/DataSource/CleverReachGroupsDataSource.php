@@ -1,6 +1,7 @@
 <?php
 namespace KaufmannDigital\CleverReach\DataSource;
 
+use KaufmannDigital\CleverReach\Exception\AuthenticationFailedException;
 use Neos\Flow\Annotations as Flow;
 use KaufmannDigital\CleverReach\Domain\Service\CleverReachApiService;
 use Neos\Neos\Service\DataSource\AbstractDataSource;
@@ -28,7 +29,11 @@ class CleverReachGroupsDataSource extends AbstractDataSource
 
     public function getData(NodeInterface $node = null, array $arguments = [])
     {
-        $groups = $this->apiService->getGroups();
+        try {
+            $groups = $this->apiService->getGroups();
+        } catch (AuthenticationFailedException $e) {
+            return [];
+        }
 
         $data = [];
         if (is_array($groups) && count($groups) > 0) {
